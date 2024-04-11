@@ -227,13 +227,32 @@ void Jeu::Remove_Wall(Position pos)
 
 void Jeu::Add_Fruit_Random()
 {
-    Pos_Fruit.x = rand()%(largeur-1); // Crée un nouveau fruit
-    Pos_Fruit.y = rand()%(hauteur-1);
-    while (terrain[Pos_Fruit.y*largeur+Pos_Fruit.x]!=VIDE)
+
+    list<Position>::const_iterator itSnake;
+    itSnake = snake.begin();
+
+    Position pos[snake.size()];
+    int idex = 0;
+    bool IsSnake = false;
+
+    while (itSnake!=snake.end())
     {
-        Pos_Fruit.x = rand()%(largeur-1);
-        Pos_Fruit.y = rand()%(hauteur-1);
+        pos[idex] = *itSnake;
+        idex++;
+        itSnake++;
     }
+
+    do{
+        IsSnake = false;
+        Pos_Fruit.x = rand()%(largeur-1); // Crée un nouveau fruit
+        Pos_Fruit.y = rand()%(hauteur-1);
+        for (int i = 0; i < snake.size(); i++)
+            if (Pos_Fruit == pos[i])
+                IsSnake = true;
+    }while (terrain[Pos_Fruit.y*largeur+Pos_Fruit.x]!=VIDE || IsSnake == true);
+
+    cout<<"Fruit dans le serpent? : "<<IsSnake<<endl;
+
     terrain[Pos_Fruit.y*largeur+Pos_Fruit.x] = FRUIT;
 }
 
