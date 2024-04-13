@@ -98,16 +98,42 @@ void SnakeWindow::paintEvent(QPaintEvent *)
 
 void SnakeWindow::keyPressEvent(QKeyEvent *event)
 {
-    if (event->key()==Qt::Key_Left)
-        jeu.setDirection(GAUCHE);
-    else if (event->key()==Qt::Key_Right)
-        jeu.setDirection(DROITE);
-    else if (event->key()==Qt::Key_Up)
-        jeu.setDirection(HAUT);
-    else if (event->key()==Qt::Key_Down)
-        jeu.setDirection(BAS);
+    if (event->key()==Qt::Key_Space)
+    {
+        jeu.TogglePause();
+        if (jeu.GetPaused())
+        {
+            cout<<"Jeu en pause"<<endl;
+
+            QLabel *label = new QLabel(this);
+            label->setText("Jeu en pause");
+            label->setAlignment(Qt::AlignCenter);
+            label->setGeometry(0, 0, width(), height());
+            label->setStyleSheet("QLabel { background-color : rgba(0, 0, 0, 100); color : white; }");
+            label->show();
+
+        }
+        else {
+            cout << "Jeu en cours" << endl;
+
+            QList<QLabel *> labels = findChildren<QLabel *>();
+            for (QLabel *label : labels)
+                label->close();
+        }
+    }
     else if (event->key()==Qt::Key_Escape)
         close();
+    else if (!jeu.GetPaused())
+    {
+        if (event->key()==Qt::Key_Left)
+            jeu.setDirection(GAUCHE);
+        else if (event->key()==Qt::Key_Right)
+            jeu.setDirection(DROITE);
+        else if (event->key()==Qt::Key_Up)
+            jeu.setDirection(HAUT);
+        else if (event->key()==Qt::Key_Down)
+            jeu.setDirection(BAS);
+    }
     else
         return;
     update();

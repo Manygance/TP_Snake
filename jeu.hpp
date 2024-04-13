@@ -25,7 +25,7 @@ class Jeu
     Direction dirSnake;
 
     Position Pos_Fruit;
-    bool Won;
+    bool pause;
     
   public:
     Jeu();
@@ -57,6 +57,14 @@ class Jeu
     void Remove_Wall(Position);
     void Add_Fruit_Random();
     void Remove_Fruit(Position);
+
+    void TogglePause() {
+        pause = !pause;
+    }
+
+    bool GetPaused() const {
+        return pause;
+    }
 };
 
 #endif

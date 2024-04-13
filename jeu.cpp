@@ -29,7 +29,7 @@ Jeu::Jeu()
     terrain = nullptr;
     largeur = 0; hauteur = 0;
     dirSnake = DROITE;
-    Won = false;
+    pause = false;
     Pos_Fruit.x = rand()%(largeur-1);
     Pos_Fruit.y = rand()%(hauteur-1);
 }
@@ -39,7 +39,7 @@ Jeu::Jeu(const Jeu &jeu):snake(jeu.snake)
     largeur = jeu.largeur;
     hauteur = jeu.hauteur;
     dirSnake = jeu.dirSnake;
-    Won = jeu.Won;
+    pause = jeu.pause;
     Pos_Fruit.x = rand()%(largeur-1);
     Pos_Fruit.y = rand()%(hauteur-1);
     
@@ -142,6 +142,11 @@ bool Jeu::init()
 
 void Jeu::evolue()
 {
+    if (pause) // Si pause, on sort de la boucle
+    {
+        return;
+    }
+
     Position posTest;
 	list<Position>::iterator itSnake;
 
@@ -157,20 +162,12 @@ void Jeu::evolue()
         snake.pop_back();
         snake.push_front(posTest);
     }
-    else
-    {
-        Won = false;
-    }
 
     if (terrain[posTest.y*largeur+posTest.x]==FRUIT)
     {
         snake.push_back(snake.back()); // Ajoute une case à la fin du serpent
         Remove_Fruit(posTest); // Supprime le fruit
         Add_Fruit_Random();
-    }
-    else if (terrain[posTest.y*largeur+posTest.x]==MUR)
-    {
-        Won = false;
     }
 }
 
@@ -251,8 +248,6 @@ void Jeu::Add_Fruit_Random()
                 IsSnake = true;
     }while (terrain[Pos_Fruit.y*largeur+Pos_Fruit.x]!=VIDE || IsSnake == true);
 
-    cout<<"Fruit dans le serpent? : "<<IsSnake<<endl;
-
     terrain[Pos_Fruit.y*largeur+Pos_Fruit.x] = FRUIT;
 }
 
@@ -260,3 +255,4 @@ void Jeu::Remove_Fruit(Position pos)
 {
     terrain[pos.y*largeur+pos.x] = VIDE;
 }
+
