@@ -17,7 +17,7 @@ add_executable(Snake ${RESOURCE_ADDED}
         main.cpp
         jeu.cpp
         snakewindow.cpp
-        )
+        mainmenu.hpp gamewindow.hpp gamewindow.cpp global_settings.hpp)
 
 target_link_libraries(Snake
         Qt5::Core
