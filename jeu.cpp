@@ -146,8 +146,10 @@ void Jeu::evolue()
     int depX[] = {-1, 1, 0, 0};
     int depY[] = {0, 0, -1, 1};
 
-    posTest.x = snake.front().x + depX[dirSnake];
-    posTest.y = snake.front().y + depY[dirSnake];
+    posTest.x = (snake.front().x + depX[dirSnake] + largeur) % largeur;
+    posTest.y = (snake.front().y + depY[dirSnake] + hauteur) % hauteur;
+
+    cout << "posTest.x: " << posTest.x << " posTest.y: " << posTest.y << endl;
 
     if (posValide(posTest)) {
         snake.pop_back();
