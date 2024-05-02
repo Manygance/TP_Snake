@@ -30,6 +30,7 @@ Jeu::Jeu()
     largeur = 0; hauteur = 0;
     dirSnake = DROITE;
     pause = false;
+    started = false;
     Pos_Fruit.x = rand()%(largeur-1);
     Pos_Fruit.y = rand()%(hauteur-1);
 }
@@ -83,6 +84,7 @@ Jeu &Jeu::operator=(const Jeu &jeu)
 bool Jeu::init()
 {
 	int x, y;
+    started = false;
 	// list<Position>::iterator itSnake;
 
 	const char terrain_defaut[15][21] = {
@@ -142,7 +144,7 @@ bool Jeu::init()
 
 void Jeu::evolue()
 {
-    if (pause) // Si pause, on sort de la boucle
+    if (pause || !started) // Si pause ou jeu non démarré, on ne fait rien
     {
         return;
     }
@@ -157,17 +159,17 @@ void Jeu::evolue()
     posTest.x = snake.front().x + depX[dirSnake];
     posTest.y = snake.front().y + depY[dirSnake];
 
-    if (posValide(posTest))
-    {
+    if (posValide(posTest)) {
         snake.pop_back();
         snake.push_front(posTest);
+        if (terrain[posTest.y * largeur + posTest.x] == FRUIT) {
+            snake.push_back(snake.back()); // Ajoute une case à la fin du serpent
+            Remove_Fruit(posTest); // Supprime le fruit
+            Add_Fruit_Random();
+        }
     }
-
-    if (terrain[posTest.y*largeur+posTest.x]==FRUIT)
-    {
-        snake.push_back(snake.back()); // Ajoute une case à la fin du serpent
-        Remove_Fruit(posTest); // Supprime le fruit
-        Add_Fruit_Random();
+    else {
+        init();
     }
 }
 

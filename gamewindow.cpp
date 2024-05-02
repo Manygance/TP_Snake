@@ -110,9 +110,11 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
                 label->close();
         }
     }
-    else if (event->key()==Qt::Key_Escape)
+    if (event->key()==Qt::Key_Escape)
         QCoreApplication::quit();
-    else if (!jeu.GetPaused())
+    if (!jeu.GetStarted())
+        jeu.setStarted();
+    if (!jeu.GetPaused())
     {
         if (event->key()==Qt::Key_Left)
             jeu.setDirection(GAUCHE);

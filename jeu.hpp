@@ -26,6 +26,7 @@ class Jeu
 
     Position Pos_Fruit;
     bool pause;
+    bool started;
     
   public:
     Jeu();
@@ -64,6 +65,14 @@ class Jeu
 
     bool GetPaused() const {
         return pause;
+    }
+
+    bool GetStarted() const {
+        return started;
+    }
+
+    void setStarted() {
+        started = true;
     }
 };
 
