@@ -1,6 +1,8 @@
 #include <iostream>
+#include <fstream>
 #include <cassert>
 #include "jeu.hpp"
+#include "global_settings.hpp"
 
 using namespace std;
 
@@ -33,6 +35,8 @@ Jeu::Jeu()
     started = false;
     Pos_Fruit.x = rand()%(largeur-1);
     Pos_Fruit.y = rand()%(hauteur-1);
+    char terrain_defaut[LIGNES][COLONNES]={0};
+    level = LEVEL;
 }
 
 Jeu::Jeu(const Jeu &jeu):snake(jeu.snake)
@@ -43,6 +47,8 @@ Jeu::Jeu(const Jeu &jeu):snake(jeu.snake)
     pause = jeu.pause;
     Pos_Fruit.x = rand()%(largeur-1);
     Pos_Fruit.y = rand()%(hauteur-1);
+    level = LEVEL;
+    char terrain_defaut[LIGNES][COLONNES]={0};
     
     if (jeu.terrain!=nullptr)
     {
@@ -85,25 +91,8 @@ bool Jeu::init()
 {
 	int x, y;
     started = false;
-	// list<Position>::iterator itSnake;
 
-	const char terrain_defaut[15][21] = {
-		"####..##############",
-		"#........##........#",
-		"#.#####..##...####.#",
-		"#........##........#",
-		"#..................#",
-		"#..................#",
-		"....................",
-        "....................",
-		"....................",
-		"....................",
-		"#..................#",
-		"#..................#",
-		"#.....#......#.....#",
-		"#.....#......#.....#",
-        "####..##############"
-    };
+    readLevel();
 
 	largeur = 20;
 	hauteur = 15;
@@ -118,6 +107,7 @@ bool Jeu::init()
                 terrain[y*largeur+x] = VIDE;
             else
                 terrain[y*largeur+x] = FRUIT;
+
 
     while (terrain[Pos_Fruit.y*largeur+Pos_Fruit.x]!=VIDE)
     {
@@ -258,3 +248,43 @@ void Jeu::Remove_Fruit(Position pos)
     terrain[pos.y*largeur+pos.x] = VIDE;
 }
 
+void Jeu::readLevel(){
+
+    string file_path;
+
+    switch (level) {
+        case 0:
+            file_path = "level_1.txt";
+            break;
+        case 1:
+            file_path = "level_2.txt";
+            break;
+        case 2:
+            file_path = "level_3.txt";
+            break;
+        case 3:
+            file_path = "level_4.txt";
+            break;
+        default:
+            file_path = "level_1.txt";
+            break;
+    }
+
+    ifstream file(file_path);
+
+    if (!file.is_open()) {
+        cerr << "Impossible d'ouvrir le fichier." << endl;
+        return;
+    }
+
+    char c;
+    for (int i = 0; i < LIGNES; ++i) {
+        for (int j = 0; j < COLONNES+1; ++j) {
+            if (file.get(c)) {
+                this->terrain_defaut[i][j] = c;
+            }
+        }
+    }
+
+    file.close();
+}

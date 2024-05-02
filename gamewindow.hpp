@@ -17,7 +17,6 @@ protected:
     Jeu jeu;
     QPixmap pixmapCorps, pixmapTete, pixmapMur, pixmapFruit;
 
-
 public:
     GameWindow();
     void paintEvent(QPaintEvent *);

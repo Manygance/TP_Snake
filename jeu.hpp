@@ -2,6 +2,7 @@
 #define JEU_HPP
 
 #include <list>
+#include "global_settings.hpp"
 
 typedef enum {VIDE, MUR, FRUIT} Case;
 typedef enum {GAUCHE, DROITE, HAUT, BAS} Direction;
@@ -27,6 +28,8 @@ class Jeu
     Position Pos_Fruit;
     bool pause;
     bool started;
+    char terrain_defaut[LIGNES][COLONNES];
+    int level;
     
   public:
     Jeu();
@@ -73,6 +76,12 @@ class Jeu
 
     void setStarted() {
         started = true;
+    }
+
+    void readLevel();
+
+    void setLevel(int level) {
+        this->level = level;
     }
 };
 
