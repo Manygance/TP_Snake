@@ -11,5 +11,6 @@
 #define COLONNES 20
 #define TAILLE_CASE 32
 #define LEVEL 1
+#define AFFICHER_CORPS 1
 
 #endif //SNAKE_GLOBAL_SETTINGS_HPP

@@ -13,36 +13,40 @@ using namespace std;
 
 GameWindow::GameWindow()
 {
-    int largeurCase, hauteurCase;
 
-    if (pixmapCorps.load("./data/snake_corps.png")==false)
+    /*
+
+     */
+    // Images récupérées ici : https://rembound.com/articles/creating-a-snake-game-tutorial-with-html5
+    if (pixmapCorps.load("./data/snake_corps.png")==false or
+        pixmapTete.load("./data/snake_tete.png")==false or
+        pixmapMur.load("./data/mur.bmp")==false or
+        pixmapFruit.load("./data/fruit.png")==false)
     {
-        cout<<"Impossible d'ouvrir snake_corps.png"<<endl;
-        exit(-1);
+        cerr<<"Erreur lors du chargement des images"<<endl;
+        exit(1);
     }
 
-    if (pixmapTete.load("./data/snake_tete.png")==false)
+    if(bodyVertical.load("./data/body_vertical.png")==false or
+       bodyHorizontal.load("./data/body_horizontal.png")==false or
+       bodyTopLeft.load("./data/body_top_left.png")==false or
+       bodyTopRight.load("./data/body_top_right.png")==false or
+       bodyBottomLeft.load("./data/body_bottom_left.png")==false or
+       bodyBottomRight.load("./data/body_bottom_right.png")==false or
+       headUp.load("./data/head_up.png")==false or
+       headDown.load("./data/head_down.png")==false or
+       headLeft.load("./data/head_left.png")==false or
+       headRight.load("./data/head_right.png")==false or
+       tailUp.load("./data/tail_up.png")==false or
+       tailDown.load("./data/tail_down.png")==false or
+       tailLeft.load("./data/tail_left.png")==false or
+       tailRight.load("./data/tail_right.png")==false)
     {
-        cout<<"Impossible d'ouvrir snake_tete.png"<<endl;
-        exit(-1);
-    }
-
-    if (pixmapMur.load("./data/mur.bmp")==false)
-    {
-        cout<<"Impossible d'ouvrir mur.bmp"<<endl;
-        exit(-1);
-    }
-
-    if (pixmapFruit.load("./data/fruit.png")==false)
-    {
-        cout<<"Impossible d'ouvrir fruit.png"<<endl;
-        exit(-1);
+        cerr<<"Erreur lors du chargement des images"<<endl;
+        exit(1);
     }
 
     jeu.init();
-
-    largeurCase = pixmapMur.width();
-    hauteurCase = pixmapMur.height();
 
     auto *timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &GameWindow::handleTimer);
@@ -71,17 +75,76 @@ void GameWindow::paintEvent(QPaintEvent *)
                 painter.drawPixmap(pos.x*largeurCase, pos.y*hauteurCase+TAILLE_BANDEAU*DEBUG, pixmapFruit);
 
 
-
     // Dessine le serpent
     const list<Position> &snake = jeu.getSnake();
     if (!snake.empty())
     {
         list<Position>::const_iterator itSnake;
-        const Position &posTete = snake.front();
-        painter.drawPixmap(posTete.x*largeurCase, posTete.y*hauteurCase+TAILLE_BANDEAU*DEBUG, pixmapTete);
+        //list<Position>::const_iterator itPrev = std::prev(itSnake);
+        //list<Position>::const_iterator itNext = std::next(itSnake);
 
-        for (itSnake=++snake.begin(); itSnake!=snake.end(); itSnake++)
-            painter.drawPixmap(itSnake->x*largeurCase, itSnake->y*hauteurCase+TAILLE_BANDEAU*DEBUG, pixmapCorps);
+        const Position &posTete = snake.front();
+
+        // Pour la tête
+        if (jeu.getDirection() == 0)
+            painter.drawPixmap(posTete.x*largeurCase, posTete.y*hauteurCase, headLeft);
+        else if (jeu.getDirection() == 1)
+            painter.drawPixmap(posTete.x*largeurCase, posTete.y*hauteurCase, headRight);
+        else if (jeu.getDirection() == 2)
+            painter.drawPixmap(posTete.x*largeurCase, posTete.y*hauteurCase, headUp);
+        else if (jeu.getDirection() == 3)
+            painter.drawPixmap(posTete.x*largeurCase, posTete.y*hauteurCase, headDown);
+
+        // Pour la queue
+        const Position &posQueue = snake.back();
+        const Position &posAvantQueue = *(++snake.rbegin());
+
+        if (posQueue.x == posAvantQueue.x && posQueue.y < posAvantQueue.y)
+            painter.drawPixmap(posQueue.x*largeurCase, posQueue.y*hauteurCase, tailDown);
+        else if (posQueue.x == posAvantQueue.x && posQueue.y > posAvantQueue.y)
+            painter.drawPixmap(posQueue.x*largeurCase, posQueue.y*hauteurCase, tailUp);
+        else if (posQueue.y == posAvantQueue.y && posQueue.x < posAvantQueue.x)
+            painter.drawPixmap(posQueue.x*largeurCase, posQueue.y*hauteurCase, tailRight);
+        else if (posQueue.y == posAvantQueue.y && posQueue.x > posAvantQueue.x)
+            painter.drawPixmap(posQueue.x*largeurCase, posQueue.y*hauteurCase, tailLeft);
+
+
+        // Pour le corps
+        if (AFFICHER_CORPS)
+        {
+            for (itSnake=++snake.begin();itSnake!=--snake.end();itSnake++)
+            {
+                Position posCorps = *itSnake;
+                Position posNext = *next(itSnake);
+                Position posPrec = *prev(itSnake);
+
+                //cout<<"x : "<<posNext.x<<":"<<posCorps.x<<":"<<posPrec.x<<endl;
+                //cout<<"y : "<<posNext.y<<":"<<posCorps.y<<":"<<posPrec.y<<endl;
+
+                if (posPrec.x < posCorps.x && posNext.x > posCorps.x || posNext.x < posCorps.x && posPrec.x > posCorps.x || posPrec.y == posNext.y)
+                    // Horizontal
+                    painter.drawPixmap(posCorps.x*largeurCase, posCorps.y*hauteurCase, bodyHorizontal);
+                else if (posPrec.x < posCorps.x && posNext.y > posCorps.y || posNext.x < posCorps.x && posPrec.y > posCorps.y)
+                    // Angle Left-Down
+                    painter.drawPixmap(posCorps.x*largeurCase, posCorps.y*hauteurCase, bodyBottomLeft);
+                else if (posPrec.y < posCorps.y && posNext.y > posCorps.y || posNext.y < posCorps.y && posPrec.y > posCorps.y || posPrec.x == posNext.x)
+                    // Vertical
+                    painter.drawPixmap(posCorps.x*largeurCase, posCorps.y*hauteurCase, bodyVertical);
+                else if (posPrec.y < posCorps.y && posNext.x < posCorps.x || posNext.y < posCorps.y && posPrec.x < posCorps.x)
+                    // Angle Top-Left
+                    painter.drawPixmap(posCorps.x*largeurCase, posCorps.y*hauteurCase, bodyTopLeft);
+                else if (posPrec.x > posCorps.x && posNext.y < posCorps.y || posNext.x > posCorps.x && posPrec.y < posCorps.y)
+                    // Angle Right-Up
+                    painter.drawPixmap(posCorps.x*largeurCase, posCorps.y*hauteurCase, bodyTopRight);
+                else if (posPrec.y > posCorps.y && posNext.x > posCorps.x || posNext.y > posCorps.y && posPrec.x > posCorps.x)
+                    // Angle Down-Right
+                    painter.drawPixmap(posCorps.x * largeurCase, posCorps.y * hauteurCase, bodyBottomRight);
+                else
+                    painter.drawPixmap(posCorps.x*largeurCase, posCorps.y*hauteurCase, pixmapCorps);
+                    
+                    
+            }
+        }
     }
 }
 

@@ -83,6 +83,10 @@ class Jeu
     void setLevel(int level) {
         this->level = level;
     }
+
+    Direction getDirection() const {
+        return dirSnake;
+    }
 };
 
 #endif

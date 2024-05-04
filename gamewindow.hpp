@@ -7,6 +7,7 @@
 
 #include <QtCore/QtCore>
 #include <QtWidgets/QtWidgets>
+#include <QImage>
 #include "jeu.hpp"
 
 
@@ -16,6 +17,7 @@ Q_OBJECT
 protected:
     Jeu jeu;
     QPixmap pixmapCorps, pixmapTete, pixmapMur, pixmapFruit;
+    QPixmap bodyVertical, bodyHorizontal, bodyTopLeft, bodyTopRight, bodyBottomLeft, bodyBottomRight, headUp, headDown, headLeft, headRight, tailUp, tailDown, tailLeft, tailRight;
 
 public:
     GameWindow();

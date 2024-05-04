@@ -91,6 +91,7 @@ bool Jeu::init()
 {
 	int x, y;
     started = false;
+    dirSnake = DROITE;
 
     readLevel();
 
@@ -149,7 +150,7 @@ void Jeu::evolue()
     posTest.x = (snake.front().x + depX[dirSnake] + largeur) % largeur;
     posTest.y = (snake.front().y + depY[dirSnake] + hauteur) % hauteur;
 
-    cout << "posTest.x: " << posTest.x << " posTest.y: " << posTest.y << endl;
+    //cout << "posTest.x: " << posTest.x << " posTest.y: " << posTest.y << endl;
 
     if (posValide(posTest)) {
         snake.pop_back();
