@@ -26,6 +26,11 @@ bool Position::operator!=(const Position &pos) const
     return (x!=pos.x || y!=pos.y);
 }
 
+bool Position::operator<(const Position &pos) const
+{
+    return (x<pos.x || (x==pos.x && y<pos.y));
+}
+
 Jeu::Jeu()
 {
     terrain = nullptr;
@@ -95,22 +100,24 @@ bool Jeu::init()
 
     readLevel();
 
-	largeur = 20;
-	hauteur = 15;
+	largeur = COLONNES_FENETRE;
+	hauteur = LIGNES_FENETRE;
+
+
 
 	terrain = new Case[largeur*hauteur];
 
-	for(y=0;y<hauteur;++y)
-		for(x=0;x<largeur;++x)
+	for(y=0;y<LIGNES_FENETRE;++y)
+		for(x=0;x<COLONNES_FENETRE;++x)
             if (terrain_defaut[y][x]=='#')
                 terrain[y*largeur+x] = MUR;
             else if (terrain_defaut[y][x]=='.')
-                terrain[y*largeur+x] = VIDE;
+                terrain[y*largeur+x] = SOL;
             else
-                terrain[y*largeur+x] = FRUIT;
+                terrain[y*largeur+x] = DEBUG;
 
 
-    while (terrain[Pos_Fruit.y*largeur+Pos_Fruit.x]!=VIDE)
+    while (terrain[Pos_Fruit.y*largeur+Pos_Fruit.x] != SOL)
     {
         Pos_Fruit.x = rand()%(largeur-1);
         Pos_Fruit.y = rand()%(hauteur-1);
@@ -190,7 +197,7 @@ const list<Position> &Jeu::getSnake() const
 bool Jeu::posValide(const Position &pos) const
 {
     if (pos.x>=0 && pos.x<largeur && pos.y>=0 && pos.y<hauteur
-        && terrain[pos.y*largeur+pos.x]==VIDE || terrain[pos.y*largeur+pos.x]==FRUIT)
+        && terrain[pos.y*largeur+pos.x] == SOL || terrain[pos.y * largeur + pos.x] == FRUIT)
     {
         list<Position>::const_iterator itSnake;
         itSnake = snake.begin();
@@ -214,7 +221,7 @@ void Jeu::Add_Wall(Position pos)
 
 void Jeu::Remove_Wall(Position pos)
 {
-    terrain[pos.y*largeur+pos.x] = VIDE;
+    terrain[pos.y*largeur+pos.x] = SOL;
 }
 
 void Jeu::Add_Fruit_Random()
@@ -241,14 +248,14 @@ void Jeu::Add_Fruit_Random()
         for (int i = 0; i < snake.size(); i++)
             if (Pos_Fruit == pos[i])
                 IsSnake = true;
-    }while (terrain[Pos_Fruit.y*largeur+Pos_Fruit.x]!=VIDE || IsSnake == true);
+    }while (terrain[Pos_Fruit.y*largeur+Pos_Fruit.x] != SOL || IsSnake == true);
 
     terrain[Pos_Fruit.y*largeur+Pos_Fruit.x] = FRUIT;
 }
 
 void Jeu::Remove_Fruit(Position pos)
 {
-    terrain[pos.y*largeur+pos.x] = VIDE;
+    terrain[pos.y*largeur+pos.x] = SOL;
 }
 
 void Jeu::readLevel(){

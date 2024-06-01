@@ -14,7 +14,7 @@ class SnakeWindow : public QMainWindow {
 
   protected:
     Jeu jeu;
-    QPixmap pixmapCorps, pixmapTete, pixmapMur, pixmapFruit;
+    QPixmap BG_Title_1, BG_Title_2;
 
     QStackedWidget *stackedWidget;
     MainMenu *mainMenu;
@@ -30,6 +30,8 @@ class SnakeWindow : public QMainWindow {
     void Clicked_Remove_Wall();
     void handleTimer();
      */
+
+    void paintEvent(QPaintEvent *event);
 
     void handlePlayClicked();
     void handleExitClicked();

@@ -5,8 +5,8 @@
 #ifndef SNAKE_GLOBAL_SETTINGS_HPP
 #define SNAKE_GLOBAL_SETTINGS_HPP
 
-#define TAILLE_BANDEAU 50
-#define DEBUG 0 // Mis à 1 : affiche les boutons et le bandeau
+#define LIGNES_FENETRE 20
+#define COLONNES_FENETRE 20
 #define LIGNES 15
 #define COLONNES 20
 #define TAILLE_CASE 32

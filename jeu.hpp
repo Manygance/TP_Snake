@@ -4,7 +4,7 @@
 #include <list>
 #include "global_settings.hpp"
 
-typedef enum {VIDE, MUR, FRUIT} Case;
+typedef enum {SOL, MUR, FRUIT, DEBUG} Case;
 typedef enum {GAUCHE, DROITE, HAUT, BAS} Direction;
 
 class Position
@@ -15,6 +15,7 @@ class Position
     Position(int,int);
     bool operator==(const Position &) const;
     bool operator!=(const Position &) const;
+    bool operator<(const Position &) const;
 };
 
 class Jeu
