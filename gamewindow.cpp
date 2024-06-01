@@ -13,20 +13,7 @@ using namespace std;
 
 GameWindow::GameWindow()
 {
-
-    /*
-
-     */
     // Images récupérées ici : https://rembound.com/articles/creating-a-snake-game-tutorial-with-html5
-    if (pixmapCorps.load("./data/snake_corps.png")==false or
-        pixmapTete.load("./data/snake_tete.png")==false or
-        pixmapMur.load("./data/mur.bmp")==false or
-        pixmapFruit.load("./data/fruit.png")==false)
-    {
-        cerr<<"Erreur lors du chargement des images"<<endl;
-        exit(1);
-    }
-
     if(bodyVertical.load("./data/body_vertical.png")==false or
        bodyHorizontal.load("./data/body_horizontal.png")==false or
        bodyTopLeft.load("./data/body_top_left.png")==false or
@@ -40,7 +27,10 @@ GameWindow::GameWindow()
        tailUp.load("./data/tail_up.png")==false or
        tailDown.load("./data/tail_down.png")==false or
        tailLeft.load("./data/tail_left.png")==false or
-       tailRight.load("./data/tail_right.png")==false)
+       tailRight.load("./data/tail_right.png")==false or
+       wall.load("./data/wall.png")==false or
+       fruit.load("./data/fruit.png")==false or
+       floor.load("./data/floor.png")==false)
     {
         cerr<<"Erreur lors du chargement des images"<<endl;
         exit(1);
@@ -63,16 +53,18 @@ void GameWindow::paintEvent(QPaintEvent *)
     // Taille des cases en pixels
     int largeurCase, hauteurCase;
 
-    largeurCase = pixmapMur.width();
-    hauteurCase = pixmapMur.height();
+    largeurCase = wall.width();
+    hauteurCase = wall.height();
 
     // Dessine les cases
     for (pos.y=0;pos.y<jeu.getNbCasesY();pos.y++)
         for (pos.x=0;pos.x<jeu.getNbCasesX();pos.x++)
             if (jeu.getCase(pos)==MUR)
-                painter.drawPixmap(pos.x*largeurCase, pos.y*hauteurCase+TAILLE_BANDEAU*DEBUG, pixmapMur);
+                painter.drawPixmap(pos.x*largeurCase, pos.y*hauteurCase, wall);
             else if (jeu.getCase(pos)==FRUIT)
-                painter.drawPixmap(pos.x*largeurCase, pos.y*hauteurCase+TAILLE_BANDEAU*DEBUG, pixmapFruit);
+                painter.drawPixmap(pos.x*largeurCase, pos.y*hauteurCase, fruit);
+            else
+                painter.drawPixmap(pos.x*largeurCase, pos.y*hauteurCase, floor);
 
 
     // Dessine le serpent
@@ -80,8 +72,6 @@ void GameWindow::paintEvent(QPaintEvent *)
     if (!snake.empty())
     {
         list<Position>::const_iterator itSnake;
-        //list<Position>::const_iterator itPrev = std::prev(itSnake);
-        //list<Position>::const_iterator itNext = std::next(itSnake);
 
         const Position &posTete = snake.front();
 
@@ -99,14 +89,19 @@ void GameWindow::paintEvent(QPaintEvent *)
         const Position &posQueue = snake.back();
         const Position &posAvantQueue = *(++snake.rbegin());
 
-        if (posQueue.x == posAvantQueue.x && posQueue.y < posAvantQueue.y)
-            painter.drawPixmap(posQueue.x*largeurCase, posQueue.y*hauteurCase, tailDown);
-        else if (posQueue.x == posAvantQueue.x && posQueue.y > posAvantQueue.y)
-            painter.drawPixmap(posQueue.x*largeurCase, posQueue.y*hauteurCase, tailUp);
-        else if (posQueue.y == posAvantQueue.y && posQueue.x < posAvantQueue.x)
-            painter.drawPixmap(posQueue.x*largeurCase, posQueue.y*hauteurCase, tailRight);
-        else if (posQueue.y == posAvantQueue.y && posQueue.x > posAvantQueue.x)
-            painter.drawPixmap(posQueue.x*largeurCase, posQueue.y*hauteurCase, tailLeft);
+        cout<<"x : "<<posQueue.x<<":"<<posAvantQueue.x<<endl;
+        cout<<"y : "<<posQueue.y<<":"<<posAvantQueue.y<<endl;
+
+        if (posQueue.x == posAvantQueue.x)
+            if(posQueue.y < posAvantQueue.y)
+                painter.drawPixmap(posQueue.x*largeurCase, posQueue.y*hauteurCase, tailDown);
+            else if(posQueue.y > posAvantQueue.y)
+                painter.drawPixmap(posQueue.x*largeurCase, posQueue.y*hauteurCase, tailUp);
+        if(posQueue.y == posAvantQueue.y)
+            if(posQueue.x < posAvantQueue.x)
+                painter.drawPixmap(posQueue.x*largeurCase, posQueue.y*hauteurCase, tailRight);
+            else if (posQueue.x > posAvantQueue.x)
+                painter.drawPixmap(posQueue.x*largeurCase, posQueue.y*hauteurCase, tailLeft);
 
 
         // Pour le corps
@@ -140,7 +135,7 @@ void GameWindow::paintEvent(QPaintEvent *)
                     // Angle Down-Right
                     painter.drawPixmap(posCorps.x * largeurCase, posCorps.y * hauteurCase, bodyBottomRight);
                 else
-                    painter.drawPixmap(posCorps.x*largeurCase, posCorps.y*hauteurCase, pixmapCorps);
+                    painter.drawPixmap(posCorps.x*largeurCase, posCorps.y*hauteurCase, fruit); // pour le debug
                     
                     
             }
@@ -179,13 +174,13 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
         jeu.setStarted();
     if (!jeu.GetPaused())
     {
-        if (event->key()==Qt::Key_Left)
+        if (event->key()==Qt::Key_Left and jeu.getDirection()!=DROITE)
             jeu.setDirection(GAUCHE);
-        else if (event->key()==Qt::Key_Right)
+        else if (event->key()==Qt::Key_Right and jeu.getDirection()!=GAUCHE)
             jeu.setDirection(DROITE);
-        else if (event->key()==Qt::Key_Up)
+        else if (event->key()==Qt::Key_Up and jeu.getDirection()!=BAS)
             jeu.setDirection(HAUT);
-        else if (event->key()==Qt::Key_Down)
+        else if (event->key()==Qt::Key_Down and jeu.getDirection()!=HAUT)
             jeu.setDirection(BAS);
     }
     else
@@ -199,6 +194,7 @@ void GameWindow::handleTimer()
     update();
 }
 
+/*
 void GameWindow::Clicked_Add_Wall()
 {
     cout<<"Ajout mur"<<endl;
@@ -227,9 +223,11 @@ void GameWindow::Clicked_Remove_Wall()
     //cout<<"Position vide : "<<pos.x<<" "<<pos.y<<endl;
     jeu.Remove_Wall(pos);
 }
+*/
 
 void GameWindow::startGame()
 {
     jeu.init();
     update();
 }
+

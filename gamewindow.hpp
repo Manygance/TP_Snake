@@ -16,7 +16,7 @@ Q_OBJECT
 
 protected:
     Jeu jeu;
-    QPixmap pixmapCorps, pixmapTete, pixmapMur, pixmapFruit;
+    QPixmap floor, wall, fruit;
     QPixmap bodyVertical, bodyHorizontal, bodyTopLeft, bodyTopRight, bodyBottomLeft, bodyBottomRight, headUp, headDown, headLeft, headRight, tailUp, tailDown, tailLeft, tailRight;
 
 public:
