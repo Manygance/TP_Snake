@@ -10,6 +10,7 @@ find_package(Qt5 COMPONENTS
         Core
         Gui
         Widgets
+        Multimedia
         REQUIRED)
 
 
@@ -23,6 +24,7 @@ target_link_libraries(Snake
         Qt5::Core
         Qt5::Gui
         Qt5::Widgets
+        Qt5::Multimedia
         )
 
 add_custom_command(
@@ -30,4 +32,5 @@ add_custom_command(
         COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::Core> $<TARGET_FILE_DIR:Snake>
         COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::Gui> $<TARGET_FILE_DIR:Snake>
         COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::Widgets> $<TARGET_FILE_DIR:Snake>
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::Multimedia> $<TARGET_FILE_DIR:Snake>
 )

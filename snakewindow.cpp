@@ -11,9 +11,6 @@ SnakeWindow::SnakeWindow(QWidget *pParent, Qt::WindowFlags flags):QMainWindow(pP
     this->setWindowTitle("Snake by Thomas and Bastien");
     this->resize(COLONNES_FENETRE*TAILLE_CASE, LIGNES_FENETRE*TAILLE_CASE);
 
-    BG_Title_1.load("./data/BG_Title_1.png");
-    BG_Title_2.load("./data/BG_Title_2.png");
-
     stackedWidget = new QStackedWidget(this);
     mainMenu = new MainMenu(this);
     stackedWidget->addWidget(mainMenu);

@@ -31,10 +31,9 @@ GameWindow::GameWindow()
        wall.load("./data/wall.png")==false or
        fruit.load("./data/fruit.png")==false or
        floor.load("./data/floor.png")==false or
-       BG_1.load("./data/BG_1.png") == false or
+       BG_1.load("./data/BG_5.png") == false or
        debug.load("./data/debug.png")==false or
-       textBox.load("./data/textbox.png")==false or
-       player_1.load("./data/Player_1_Cut.png")==false )
+       textBox.load("./data/textbox.png")==false)
     {
         cerr<<"Erreur lors du chargement des images"<<endl;
         exit(1);
@@ -66,27 +65,66 @@ void GameWindow::paintEvent(QPaintEvent *)
             if (jeu.getCase(pos)==MUR)
             {
                 //painter.drawPixmap(pos.x*largeurCase, pos.y*hauteurCase, wall);
-                QRect sourceRect(9 + 4 * 25, 163 + 4 * 25, 24, 24);;
+                QRect sourceRect(9 + 4 * 25, 163 + 4 * 25, 24, 24);
                 QRect destRect(pos.x * largeurCase, pos.y * hauteurCase, 32, 32);
                 painter.drawPixmap(destRect, BG_1, sourceRect);
             }
-
             else if (jeu.getCase(pos)==FRUIT){
                 QRect sourceRect = grid[pos];
                 QRect destRect(pos.x * largeurCase, pos.y * hauteurCase, 32, 32);
                 painter.drawPixmap(destRect, BG_1, sourceRect);
                 painter.drawPixmap(pos.x*largeurCase, pos.y*hauteurCase, fruit);
             }
-
-
             else if (jeu.getCase(pos) == SOL){
                 QRect sourceRect = grid[pos];
                 QRect destRect(pos.x * largeurCase, pos.y * hauteurCase, 32, 32);
                 painter.drawPixmap(destRect, BG_1, sourceRect);
+            }// Pour l'affichage au niveau de la text box
+            else if (pos.x==0 and pos.y==15){
+                QRect sourceRect(9 + 3 * 25, 163 + 0 * 25, 24, 24);
+                QRect destRect(pos.x * largeurCase, pos.y * hauteurCase, 32, 32);
+                painter.drawPixmap(destRect, BG_1, sourceRect);
             }
+            else if (pos.x==19 and pos.y==15){
+                QRect sourceRect(9 + 5 * 25, 163 + 0 * 25, 24, 24);
+                QRect destRect(pos.x * largeurCase, pos.y * hauteurCase, 32, 32);
+                painter.drawPixmap(destRect, BG_1, sourceRect);
+            }
+            else if (pos.x==0 and pos.y==19){
+                QRect sourceRect(9 + 3 * 25, 163 + 2 * 25, 24, 24);
+                QRect destRect(pos.x * largeurCase, pos.y * hauteurCase, 32, 32);
+                painter.drawPixmap(destRect, BG_1, sourceRect);
+            }
+            else if (pos.x==19 and pos.y==19){
+                QRect sourceRect(9 + 5 * 25, 163 + 2 * 25, 24, 24);
+                QRect destRect(pos.x * largeurCase, pos.y * hauteurCase, 32, 32);
+                painter.drawPixmap(destRect, BG_1, sourceRect);
+            }
+            else if (pos.x==19){
+                QRect sourceRect(9 + 5 * 25, 163 + 1 * 25, 24, 24);
+                QRect destRect(pos.x * largeurCase, pos.y * hauteurCase, 32, 32);
+                painter.drawPixmap(destRect, BG_1, sourceRect);
+            }
+            else if (pos.x==0){
+                QRect sourceRect(9 + 3 * 25, 163 + 1 * 25, 24, 24);
+                QRect destRect(pos.x * largeurCase, pos.y * hauteurCase, 32, 32);
+                painter.drawPixmap(destRect, BG_1, sourceRect);
+            }
+            else if (pos.y==15){
+                QRect sourceRect(9 + 4 * 25, 163 + 0 * 25, 24, 24);
+                QRect destRect(pos.x * largeurCase, pos.y * hauteurCase, 32, 32);
+                painter.drawPixmap(destRect, BG_1, sourceRect);
+            }
+            else if (pos.y==19){
+                QRect sourceRect(9 + 4 * 25, 163 + 2 * 25, 24, 24);
+                QRect destRect(pos.x * largeurCase, pos.y * hauteurCase, 32, 32);
+                painter.drawPixmap(destRect, BG_1, sourceRect);
+            }
+            else
+                painter.drawPixmap(pos.x*largeurCase, pos.y*hauteurCase, debug);
 
-            //else
-                //painter.drawPixmap(pos.x*largeurCase, pos.y*hauteurCase, debug);
+
+
 
 
 
@@ -94,7 +132,7 @@ void GameWindow::paintEvent(QPaintEvent *)
     const list<Position> &snake = jeu.getSnake();
     if (!snake.empty())
     {
-        /*
+
         list<Position>::const_iterator itSnake;
 
         const Position &posTete = snake.front();
@@ -164,112 +202,6 @@ void GameWindow::paintEvent(QPaintEvent *)
                     painter.drawPixmap(posCorps.x*largeurCase, posCorps.y*hauteurCase, fruit); // pour le debug
             }
         }
-*/
-
-        int frame_x = 0, frame_y = 0;
-
-        // Pour la tête
-        if (jeu.getDirection() == DROITE)
-        {
-            frame_x = 58;
-            frame_y = 22;
-        }
-        else if (jeu.getDirection() == GAUCHE)
-        {
-            frame_x = 1;
-            frame_y = 22;
-        }
-        else if (jeu.getDirection() == HAUT)
-        {
-            frame_x = 58;
-            frame_y = 1;
-        }
-        else if (jeu.getDirection() == BAS)
-        {
-            frame_x = 1;
-            frame_y = 1;
-        }
-
-        list<Position>::const_iterator itSnake;
-
-        const Position &posTete = snake.front();
-        QRect sourceRect(frame_x+19*(frame_number), frame_y, 18, 20);
-        QRect destRect(posTete.x * largeurCase, posTete.y * hauteurCase, 32, 32);
-        painter.drawPixmap(destRect, player_1, sourceRect);
-
-
-        // Pour la queue
-        const Position &posQueue = snake.back();
-        const Position &posAvantQueue = *(++snake.rbegin());
-
-        if (posQueue.x == posAvantQueue.x)
-            if(posQueue.y < posAvantQueue.y)
-            {
-                frame_x = 1;
-                frame_y= 1;
-            }
-            else if(posQueue.y > posAvantQueue.y)
-            {
-                frame_x = 58;
-                frame_y = 1;
-            }
-        if(posQueue.y == posAvantQueue.y)
-            if(posQueue.x < posAvantQueue.x)
-            {
-                frame_x = 58;
-                frame_y = 22;
-            }
-            else if (posQueue.x > posAvantQueue.x)
-            {
-                frame_x = 1;
-                frame_y = 22;
-            }
-
-        sourceRect = QRect(frame_x+19*(frame_number), frame_y, 18, 20);
-        destRect = QRect(posQueue.x * largeurCase, posQueue.y * hauteurCase, 32, 32);
-        painter.drawPixmap(destRect, player_1, sourceRect);
-
-        // Pour le corps
-        if (AFFICHER_CORPS) {
-            for (itSnake = ++snake.begin(); itSnake != --snake.end(); itSnake++) {
-                Position posCorps = *itSnake;
-                Position posNext = *next(itSnake);
-                Position posPrec = *prev(itSnake);
-
-                if (posPrec.x < posCorps.x && posNext.x > posCorps.x ||
-                    posNext.x < posCorps.x && posPrec.x > posCorps.x || posPrec.y == posNext.y) {
-                    // Horizontal
-                    sourceRect = QRect(1, 43, 18, 18);
-                    destRect = QRect(posCorps.x * largeurCase, posCorps.y * hauteurCase, 32, 32);
-                    painter.drawPixmap(destRect, player_1, sourceRect);
-                } else if (posPrec.x < posCorps.x && posNext.y > posCorps.y ||
-                           posNext.x < posCorps.x && posPrec.y > posCorps.y) {
-                    // Angle Left-Down
-                    sourceRect = QRect(1, 1, 18, 18);
-                    destRect = QRect(posCorps.x * largeurCase, posCorps.y * hauteurCase, 32, 32);
-                    painter.drawPixmap(destRect, player_1, sourceRect);
-                } else if (posPrec.y < posCorps.y && posNext.y > posCorps.y ||
-                           posNext.y < posCorps.y && posPrec.y > posCorps.y || posPrec.x == posNext.x) {
-                    // Vertical
-                    sourceRect = QRect(20, 43, 18, 18);
-                    destRect = QRect(posCorps.x * largeurCase, posCorps.y * hauteurCase, 32, 32);
-                    painter.drawPixmap(destRect, player_1, sourceRect);
-                } else if (posPrec.y < posCorps.y && posNext.x < posCorps.x ||
-                           posNext.y < posCorps.y && posPrec.x < posCorps.x) {
-                    // Angle Top-Left
-                    sourceRect = QRect(20, 1, 18, 18);
-                    destRect = QRect(posCorps.x * largeurCase, posCorps.y * hauteurCase, 32, 32);
-                    painter.drawPixmap(destRect, player_1, sourceRect);
-                }
-            }
-        }
-
-
-        if(frame_number == 0)
-            frame_direction = 1;
-        else if(frame_number == 2)
-            frame_direction = -1;
-        frame_number += frame_direction;
 
         // Afficher la textbox
         painter.drawPixmap(0, 480, textBox);

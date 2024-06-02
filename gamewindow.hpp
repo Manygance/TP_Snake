@@ -20,10 +20,6 @@ protected:
     QPixmap bodyVertical, bodyHorizontal, bodyTopLeft, bodyTopRight, bodyBottomLeft, bodyBottomRight, headUp, headDown, headLeft, headRight, tailUp, tailDown, tailLeft, tailRight;
     QPixmap BG_1;
     QPixmap debug, textBox;
-    QPixmap player_1;
-
-    int frame_number = 0;
-    int frame_direction = 1;
 
 public:
     GameWindow();
