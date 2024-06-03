@@ -23,32 +23,26 @@ SnakeWindow::SnakeWindow(QWidget *pParent, Qt::WindowFlags flags):QMainWindow(pP
 
 }
 
-void SnakeWindow::handlePlayClicked() {
-    cout << "Play map clicked" << endl;
+void SnakeWindow::handlePlayClicked(int level) {
+    //cout << "Play map clicked" << endl;
     GameWindow *gameWindow = new GameWindow();
     stackedWidget->addWidget(gameWindow);
     stackedWidget->setCurrentWidget(gameWindow);
+    gameWindow->setLevel(level);
     gameWindow->startGame();
 }
 
 void SnakeWindow::handleExitClicked() {
-    cout << "Exit clicked" << endl;
+    //cout << "Exit clicked" << endl;
     QCoreApplication::quit();
 }
 
 void SnakeWindow::handleCreateMapClicked() {
-    cout << "Create map clicked" << endl;
+    //cout << "Create map clicked" << endl;
     //stackedWidget->setCurrentWidget(mapEditor);
 }
 
 void SnakeWindow::paintEvent(QPaintEvent *event) {
     QMainWindow::paintEvent(event);
-
-    QPainter painter(this);
-
-    QRect sourceRect(0, 0, BG_Title_1.width(), BG_Title_1.height());
-    QRect targetRect(0, 0, width(), height());
-    painter.drawPixmap(targetRect, BG_Title_1, sourceRect);
-
 }
 

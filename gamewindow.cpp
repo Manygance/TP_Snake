@@ -31,7 +31,6 @@ GameWindow::GameWindow()
        wall.load("./data/wall.png")==false or
        fruit.load("./data/fruit.png")==false or
        floor.load("./data/floor.png")==false or
-       BG_1.load("./data/BG_5.png") == false or
        debug.load("./data/debug.png")==false or
        textBox.load("./data/textbox.png")==false)
     {
@@ -39,7 +38,9 @@ GameWindow::GameWindow()
         exit(1);
     }
 
-    jeu.init();
+    int randomIndex = QRandomGenerator::global()->bounded(1, 6); // Génère un nombre entre 1 et 5 inclusivement
+    QString backgroundImagePath = QString("./data/BG_%1.png").arg(randomIndex);
+    background.load(backgroundImagePath);
 
     auto *timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &GameWindow::handleTimer);
@@ -67,61 +68,67 @@ void GameWindow::paintEvent(QPaintEvent *)
                 //painter.drawPixmap(pos.x*largeurCase, pos.y*hauteurCase, wall);
                 QRect sourceRect(9 + 4 * 25, 163 + 4 * 25, 24, 24);
                 QRect destRect(pos.x * largeurCase, pos.y * hauteurCase, 32, 32);
-                painter.drawPixmap(destRect, BG_1, sourceRect);
+                painter.drawPixmap(destRect, background, sourceRect);
             }
             else if (jeu.getCase(pos)==FRUIT){
                 QRect sourceRect = grid[pos];
                 QRect destRect(pos.x * largeurCase, pos.y * hauteurCase, 32, 32);
-                painter.drawPixmap(destRect, BG_1, sourceRect);
+                painter.drawPixmap(destRect, background, sourceRect);
                 painter.drawPixmap(pos.x*largeurCase, pos.y*hauteurCase, fruit);
             }
             else if (jeu.getCase(pos) == SOL){
                 QRect sourceRect = grid[pos];
                 QRect destRect(pos.x * largeurCase, pos.y * hauteurCase, 32, 32);
-                painter.drawPixmap(destRect, BG_1, sourceRect);
-            }// Pour l'affichage au niveau de la text box
-            else if (pos.x==0 and pos.y==15){
+                painter.drawPixmap(destRect, background, sourceRect);
+            }
+            else
+                painter.drawPixmap(pos.x*largeurCase, pos.y*hauteurCase, debug);
+
+    // Pour l'affichage au niveau de la text box
+    for (pos.y=jeu.getNbCasesY();pos.y<jeu.getNbCasesY()+5;pos.y++)
+        for (pos.x=0;pos.x<jeu.getNbCasesX();pos.x++)
+        {
+            if (pos.x==0 and pos.y==15){
                 QRect sourceRect(9 + 3 * 25, 163 + 0 * 25, 24, 24);
                 QRect destRect(pos.x * largeurCase, pos.y * hauteurCase, 32, 32);
-                painter.drawPixmap(destRect, BG_1, sourceRect);
+                painter.drawPixmap(destRect, background, sourceRect);
             }
             else if (pos.x==19 and pos.y==15){
                 QRect sourceRect(9 + 5 * 25, 163 + 0 * 25, 24, 24);
                 QRect destRect(pos.x * largeurCase, pos.y * hauteurCase, 32, 32);
-                painter.drawPixmap(destRect, BG_1, sourceRect);
+                painter.drawPixmap(destRect, background, sourceRect);
             }
             else if (pos.x==0 and pos.y==19){
                 QRect sourceRect(9 + 3 * 25, 163 + 2 * 25, 24, 24);
                 QRect destRect(pos.x * largeurCase, pos.y * hauteurCase, 32, 32);
-                painter.drawPixmap(destRect, BG_1, sourceRect);
+                painter.drawPixmap(destRect, background, sourceRect);
             }
             else if (pos.x==19 and pos.y==19){
                 QRect sourceRect(9 + 5 * 25, 163 + 2 * 25, 24, 24);
                 QRect destRect(pos.x * largeurCase, pos.y * hauteurCase, 32, 32);
-                painter.drawPixmap(destRect, BG_1, sourceRect);
+                painter.drawPixmap(destRect, background, sourceRect);
             }
             else if (pos.x==19){
                 QRect sourceRect(9 + 5 * 25, 163 + 1 * 25, 24, 24);
                 QRect destRect(pos.x * largeurCase, pos.y * hauteurCase, 32, 32);
-                painter.drawPixmap(destRect, BG_1, sourceRect);
+                painter.drawPixmap(destRect, background, sourceRect);
             }
             else if (pos.x==0){
                 QRect sourceRect(9 + 3 * 25, 163 + 1 * 25, 24, 24);
                 QRect destRect(pos.x * largeurCase, pos.y * hauteurCase, 32, 32);
-                painter.drawPixmap(destRect, BG_1, sourceRect);
+                painter.drawPixmap(destRect, background, sourceRect);
             }
             else if (pos.y==15){
                 QRect sourceRect(9 + 4 * 25, 163 + 0 * 25, 24, 24);
                 QRect destRect(pos.x * largeurCase, pos.y * hauteurCase, 32, 32);
-                painter.drawPixmap(destRect, BG_1, sourceRect);
+                painter.drawPixmap(destRect, background, sourceRect);
             }
             else if (pos.y==19){
                 QRect sourceRect(9 + 4 * 25, 163 + 2 * 25, 24, 24);
                 QRect destRect(pos.x * largeurCase, pos.y * hauteurCase, 32, 32);
-                painter.drawPixmap(destRect, BG_1, sourceRect);
+                painter.drawPixmap(destRect, background, sourceRect);
             }
-            else
-                painter.drawPixmap(pos.x*largeurCase, pos.y*hauteurCase, debug);
+        }
 
 
 
@@ -263,8 +270,8 @@ void GameWindow::handleTimer()
 
 void GameWindow::startGame()
 {
-    initGrid();
     jeu.init();
+    initGrid();
     update();
 }
 

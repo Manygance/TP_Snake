@@ -33,7 +33,7 @@ class SnakeWindow : public QMainWindow {
 
     void paintEvent(QPaintEvent *event);
 
-    void handlePlayClicked();
+    void handlePlayClicked(int level);
     void handleExitClicked();
     void handleCreateMapClicked();
 };

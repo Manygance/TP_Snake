@@ -30,12 +30,13 @@ class Jeu
     bool pause;
     bool started;
     char terrain_defaut[LIGNES][COLONNES];
-    int level;
+
     
   public:
     Jeu();
     Jeu(const Jeu &);
     ~Jeu();
+    int level;
 
     Jeu &operator=(const Jeu &);
 

@@ -60,41 +60,99 @@ public:
         }
 
         QString fontFamily = QFontDatabase::applicationFontFamilies(fontId).at(0);
-/*
-        const auto title = new QLabel("Snake", this);
-        title->setFont(QFont(fontFamily, 60));
-        title->setAlignment(Qt::AlignCenter);
-        title->setStyleSheet("color: white;");
 
-        const auto subTitle = new QLabel("by Thomas DEBELLE & Bastien JAYET", this);
-        subTitle->setFont(QFont(fontFamily, 12));
-        subTitle->setAlignment(Qt::AlignCenter);
-        subTitle->setStyleSheet("color: white;");
-*/
+        const auto text_1 = new QLabel("Projet de programmation avancée", this);
+        text_1->setFont(QFont(fontFamily, 12));
+        text_1->setStyleSheet(
+                "color: white;"
+                "padding-top: 510px;"
+                "padding-left: 30px;"
+                );
+
+
+        const auto text_2 = new QLabel("par Thomas DEBELLE & Bastien JAYET", this);
+        text_2->setFont(QFont(fontFamily, 12));
+        text_2->setStyleSheet(
+                "color: white;"
+                "padding-top: 530px;"
+                "padding-left: 30px;"
+                );
+
+
 
         // Boutons
-        const auto playButton = new QPushButton("Play a map", this);
-        playButton->setFont(QFont(fontFamily, 12));
-        playButton->setGeometry(0, 0, 160, 20);
-        playButton->move(40, 40);
-        playButton->setCursor(Qt::PointingHandCursor);
-        playButton->setStyleSheet(
+        const auto playEmptyButton = new QPushButton("Empty map", this);
+        playEmptyButton->setFont(QFont(fontFamily, 12));
+        playEmptyButton->setGeometry(0, 0, 160, 20);
+        playEmptyButton->move(40, 40);
+        playEmptyButton->setCursor(Qt::PointingHandCursor);
+        playEmptyButton->setStyleSheet(
                 "QPushButton {"
                 "    background-color: transparent;"
                 "    border: none;"
                 "    color: white;"
                 "    text-align: left;"
-                "    padding-left: 0px;"
                 "}"
                 "QPushButton:hover {"
                 "    color: yellow;"
                 "}"
         );
 
-        const auto mapEditor = new QPushButton("Create a map", this);
+        const auto playMaze1Button = new QPushButton("Maze map 1", this);
+        playMaze1Button->setFont(QFont(fontFamily, 12));
+        playMaze1Button->setGeometry(0, 0, 160, 20);
+        playMaze1Button->move(40, 70);
+        playMaze1Button->setCursor(Qt::PointingHandCursor);
+        playMaze1Button->setStyleSheet(
+                "QPushButton {"
+                "    background-color: transparent;"
+                "    border: none;"
+                "    color: white;"
+                "    text-align: left;"
+                "}"
+                "QPushButton:hover {"
+                "    color: yellow;"
+                "}"
+        );
+
+        const auto playMaze2Button = new QPushButton("Maze map 2", this);
+        playMaze2Button->setFont(QFont(fontFamily, 12));
+        playMaze2Button->setGeometry(0, 0, 160, 20);
+        playMaze2Button->move(40, 100);
+        playMaze2Button->setCursor(Qt::PointingHandCursor);
+        playMaze2Button->setStyleSheet(
+                "QPushButton {"
+                "    background-color: transparent;"
+                "    border: none;"
+                "    color: white;"
+                "    text-align: left;"
+                "}"
+                "QPushButton:hover {"
+                "    color: yellow;"
+                "}"
+        );
+
+        const auto playOwnButton = new QPushButton("Personalized map", this);
+        playOwnButton->setFont(QFont(fontFamily, 12));
+        playOwnButton->setGeometry(0, 0, 160, 20);
+        playOwnButton->move(40, 130);
+        playOwnButton->setCursor(Qt::PointingHandCursor);
+        playOwnButton->setStyleSheet(
+                "QPushButton {"
+                "    background-color: transparent;"
+                "    border: none;"
+                "    color: white;"
+                "    text-align: left;"
+                "}"
+                "QPushButton:hover {"
+                "    color: yellow;"
+                "}"
+        );
+
+        const auto mapEditor = new QPushButton("Modify maps", this);
         mapEditor->setFont(QFont(fontFamily, 12));
         mapEditor->setGeometry(0, 0, 160, 20);
-        mapEditor->move(40, 70);
+        mapEditor->move(40, 160);
         mapEditor->setCursor(Qt::PointingHandCursor);
         mapEditor->setStyleSheet(
                 "QPushButton {"
@@ -102,7 +160,6 @@ public:
                 "    border: none;"
                 "    color: white;"
                 "    text-align: left;"
-                "    padding-left: 0px;"
                 "}"
                 "QPushButton:hover {"
                 "    color: yellow;"
@@ -112,7 +169,7 @@ public:
         const auto exitButton = new QPushButton("Exit", this);
         exitButton->setFont(QFont(fontFamily, 12));
         exitButton->setGeometry(0, 0, 160, 20);
-        exitButton->move(40, 100);
+        exitButton->move(40, 190);
         exitButton->setCursor(Qt::PointingHandCursor);
         exitButton->setStyleSheet(
                 "QPushButton {"
@@ -120,20 +177,23 @@ public:
                 "    border: none;"
                 "    color: white;"
                 "    text-align: left;"
-                "    padding-left: 0px;"
                 "}"
                 "QPushButton:hover {"
                 "    color: yellow;"
                 "}"
         );
 
-        connect(playButton, &QPushButton::clicked, this, &MainMenu::playClicked);
+        connect(playEmptyButton, &QPushButton::clicked, this, [this]() { this->playClicked(0); });
+        connect(playMaze1Button, &QPushButton::clicked, this, [this]() { this->playClicked(1); });
+        connect(playMaze2Button, &QPushButton::clicked, this, [this]() { this->playClicked(2); });
+        connect(playOwnButton, &QPushButton::clicked, this, [this]() { this->playClicked(3); });
+
         connect(mapEditor, &QPushButton::clicked, this, &MainMenu::createMapClicked);
         connect(exitButton, &QPushButton::clicked, this, &MainMenu::exitClicked);
     }
 
 signals:
-    void playClicked();
+    void playClicked(int);
 
     void exitClicked();
 

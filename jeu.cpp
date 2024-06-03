@@ -100,15 +100,15 @@ bool Jeu::init()
 
     readLevel();
 
-	largeur = COLONNES_FENETRE;
-	hauteur = LIGNES_FENETRE;
+	largeur = COLONNES;
+	hauteur = LIGNES;
 
 
 
 	terrain = new Case[largeur*hauteur];
 
-	for(y=0;y<LIGNES_FENETRE;++y)
-		for(x=0;x<COLONNES_FENETRE;++x)
+	for(y=0;y<LIGNES;++y)
+		for(x=0;x<COLONNES;++x)
             if (terrain_defaut[y][x]=='#')
                 terrain[y*largeur+x] = MUR;
             else if (terrain_defaut[y][x]=='.')
@@ -265,18 +265,23 @@ void Jeu::readLevel(){
     switch (level) {
         case 0:
             file_path = "level_1.txt";
+            //cout << "level 1" << endl;
             break;
         case 1:
             file_path = "level_2.txt";
+            //cout << "level 2" << endl;
             break;
         case 2:
             file_path = "level_3.txt";
+            //cout << "level 3" << endl;
             break;
         case 3:
             file_path = "level_4.txt";
+            //cout << "level 4" << endl;
             break;
         default:
             file_path = "level_1.txt";
+            //cout << "default" << endl;
             break;
     }
 
