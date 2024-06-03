@@ -18,6 +18,9 @@ find_package(Qt5 COMPONENTS
         Widgets
         REQUIRED)
 
+include_directories(${FMOD_INCLUDE_DIR})
+link_libraries(${FMOD_LIBRARY_LIB})
+
 add_executable(Snake ${RESOURCE_ADDED}
         main.cpp
         jeu.cpp
@@ -34,6 +37,7 @@ target_link_libraries(Snake
         Qt5::Widgets
         ${FMOD_LIBRARY_LIB}
         )
+
 
 add_custom_command(
         TARGET Snake POST_BUILD
