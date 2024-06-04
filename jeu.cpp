@@ -194,16 +194,6 @@ void Jeu::setDirection(Direction dir)
     dirSnake = dir;
 }
 
-void Jeu::Add_Wall(Position pos)
-{
-    terrain[pos.y*largeur+pos.x] = MUR;
-}
-
-void Jeu::Remove_Wall(Position pos)
-{
-    terrain[pos.y*largeur+pos.x] = SOL;
-}
-
 void Jeu::Add_Fruit_Random()
 {
 

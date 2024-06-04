@@ -9,6 +9,9 @@
 #include "global_settings.hpp"
 #include <iostream>
 #include "jeu.hpp"
+#include <QCursor>
+#include <QMouseEvent>
+#include <fstream>
 
 using namespace std;
 
@@ -43,10 +46,6 @@ EditorWindow::EditorWindow()
     QString backgroundImagePath = QString("./data/BG_%1.png").arg(randomIndex);
     background.load(backgroundImagePath);
 
-    auto *timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, &EditorWindow::handleTimer);
-    timer->start(100);
-
     QString fontPath = "./data/font.ttf";
     int fontId = QFontDatabase::addApplicationFont(fontPath);
     if (fontId == -1) {
@@ -77,7 +76,7 @@ EditorWindow::EditorWindow()
     const auto Maze_2_Button = new QPushButton("Maze 2", this);
     Maze_2_Button->setFont(QFont(fontFamily, 12));
     Maze_2_Button->setGeometry(0, 0, 160, 20);
-    Maze_2_Button->move(280, 520);
+    Maze_2_Button->move(40, 550);
     Maze_2_Button->setCursor(Qt::PointingHandCursor);
     Maze_2_Button->setStyleSheet(
             "QPushButton {"
@@ -95,7 +94,7 @@ EditorWindow::EditorWindow()
     const auto Personnalized_Button = new QPushButton("Personalized", this);
     Personnalized_Button->setFont(QFont(fontFamily, 12));
     Personnalized_Button->setGeometry(0, 0, 160, 20);
-    Personnalized_Button->move(460, 520);
+    Personnalized_Button->move(40, 580);
     Personnalized_Button->setCursor(Qt::PointingHandCursor);
     Personnalized_Button->setStyleSheet(
             "QPushButton {"
@@ -109,6 +108,29 @@ EditorWindow::EditorWindow()
             "    color: yellow;"
             "}"
     );
+
+    const auto SaveButton = new QPushButton("Save", this);
+    SaveButton->setFont(QFont(fontFamily, 12));
+    SaveButton->setGeometry(0, 0, 160, 20);
+    SaveButton->move(200, 520);
+    SaveButton->setCursor(Qt::PointingHandCursor);
+    SaveButton->setStyleSheet(
+            "QPushButton {"
+            "    background-color: transparent;"
+            "    border: none;"
+            "    color: white;"
+            "    font-size: 16px;"
+            "    text-align: left;"
+            "}"
+            "QPushButton:hover {"
+            "    color: yellow;"
+            "}"
+    );
+
+    connect(Maze_1_Button, &QPushButton::clicked, this, [this]() { this->loadMaze(1); });
+    connect(Maze_2_Button, &QPushButton::clicked, this, [this]() { this->loadMaze(2); });
+    connect(Personnalized_Button, &QPushButton::clicked, this, [this]() { this->loadMaze(3); });
+    connect(SaveButton, &QPushButton::clicked, this, &EditorWindow::saveMap);
 
 }
 
@@ -189,8 +211,6 @@ void EditorWindow::paintEvent(QPaintEvent *) {
 
         const Position &posTete = snake.front();
 
-
-
         // Pour la tête
         if (jeu.getDirection() == 0)
             painter.drawPixmap(posTete.x * largeurCase, posTete.y * hauteurCase, headLeft);
@@ -258,20 +278,9 @@ void EditorWindow::paintEvent(QPaintEvent *) {
                     painter.drawPixmap(posCorps.x * largeurCase, posCorps.y * hauteurCase, debug); // pour le debug
             }
         }
-
-        // Afficher la textbox
-
-
-
-
-
     }
 
-
     painter.drawPixmap(0, 480, textBox);
-
-    //cout<<jeu.GetStarted()<<"  "<<jeu.getScore()<<endl;
-
 }
 
 void EditorWindow::keyPressEvent(QKeyEvent *event)
@@ -318,25 +327,60 @@ void EditorWindow::keyPressEvent(QKeyEvent *event)
     update();
 }
 
-void EditorWindow::handleTimer()
-{
-    jeu.readLevel();
-    jeu.initLevel();
-
-    //cout<<jeu.getCase(1,1)<<endl;
-    //if(jeu.getCase(1,1) == '.')
-        jeu.setCase(1,1,'*');
-    //else
-    //    jeu.setCase(1,1,'.');
-    update();
-}
-
-
 void EditorWindow::startEditor()
 {
     jeu.readLevel();
     jeu.initLevel();
     initGrid();
     update();
+}
+
+void EditorWindow::mousePressEvent(QMouseEvent *event) {
+    QPoint localMousePos = event->pos();  // Position locale de la souris
+
+    int largeurCase = wall.width();
+    int hauteurCase = wall.height();
+    int x = localMousePos.x() / largeurCase;
+    int y = localMousePos.y() / hauteurCase;
+
+    if (x >= 0 && x < jeu.getNbCasesX() && y >= 0 && y < jeu.getNbCasesY()) {
+        // Modifier la case
+        if (jeu.getCase(x, y) == SOL) {
+            jeu.setCase(x, y, MUR);
+        } else {
+            jeu.setCase(x, y, SOL);
+        }
+        update();
+    }
+}
+
+void EditorWindow::loadMaze(int mazeIndex) {
+
+    jeu.setLevel(mazeIndex);
+    jeu.readLevel();
+    jeu.initLevel();
+    initGrid();
+    update();
+
+}
+
+void EditorWindow::saveMap() {
+
+    ofstream file;
+    file.open (jeu.getLevelTxT());
+
+    for (int i = 0; i < LIGNES; ++i) {
+        for (int j = 0; j < COLONNES; ++j) {
+            if (jeu.getCase(j, i) == MUR)
+                file << "#"; // Écrire un point pour une case SOL
+            else
+                file << "."; // Écrire un dièse pour une case MUR
+        }
+        file << "\n"; // Nouvelle ligne après chaque ligne de la matrice
+    }
+
+
+    file.close();
+
 }
 

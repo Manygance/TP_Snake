@@ -86,12 +86,12 @@ class Jeu
     void initLevel();
     void initFruit();
 
-    char getCase(int x, int y){
-        return terrain_defaut[y][x];
+    Case getCase(int x, int y){
+        return terrain[y*largeur+x];
     }
 
-    void setCase(int x, int y, char c){
-        terrain_defaut[y][x] = c;
+    void setCase(int x, int y, Case c){
+        terrain[y*largeur+x] = c;
     }
 
     std::string getLevelTxT();

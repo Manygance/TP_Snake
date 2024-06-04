@@ -26,10 +26,10 @@ public:
     void paintEvent(QPaintEvent *);
     void keyPressEvent(QKeyEvent *);
     void startEditor();
-    void handleTimer();
     void setLevel(int level) {
         this->jeu.level = level;
     }
+    void mousePressEvent(QMouseEvent *event);
 
     QMap<Position, QRect> grid;
 
@@ -37,20 +37,18 @@ public:
         for (int y = 0; y < jeu.getNbCasesY(); ++y) {
             for (int x = 0; x < jeu.getNbCasesX(); ++x) {
                 Position pos(x, y);
-                if (jeu.getCase(pos) != MUR ) {
-                    int randomX = QRandomGenerator::global()->bounded(3);
-                    int randomY = QRandomGenerator::global()->bounded(3);
-                    QRect sourceRect(9 + (12 + randomX) * 25, 163 + randomY * 25, 24, 24);
-                    grid[pos] = sourceRect;
-                }
+                int randomX = QRandomGenerator::global()->bounded(3);
+                int randomY = QRandomGenerator::global()->bounded(3);
+                QRect sourceRect(9 + (12 + randomX) * 25, 163 + randomY * 25, 24, 24);
+                grid[pos] = sourceRect;
+
             }
         }
     }
 
-
-signals:
-    void showLevel(int);
-
+private slots:
+    void loadMaze(int mazeIndex);
+    void saveMap();
 
 };
 

@@ -218,7 +218,6 @@ void GameWindow::paintEvent(QPaintEvent *) {
         }
     }
 
-
     painter.drawPixmap(0, 480, textBox);
 
     //cout<<jeu.GetStarted()<<"  "<<jeu.getScore()<<endl;
