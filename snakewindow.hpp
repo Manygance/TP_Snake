@@ -19,7 +19,6 @@ class SnakeWindow : public QMainWindow {
 
     QStackedWidget *stackedWidget;
     MainMenu *mainMenu;
-    SoundManager soundManager; // Déclarez le SoundManager ici
 
   public:
     SnakeWindow(QWidget *pParent=nullptr, Qt::WindowFlags flags=Qt::WindowFlags());

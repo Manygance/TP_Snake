@@ -1,34 +1,20 @@
-#ifndef MEDIAPLAYER_HPP
-#define MEDIAPLAYER_HPP
+#ifndef SOUND_HPP
+#define SOUND_HPP
 
-#include <fmod/fmod.hpp>
-#include <vector>
 #include <string>
+#include <vector>
+#include <fmod/fmod.h>
 
-class SoundManager {
-public:
-    SoundManager();
-    ~SoundManager();
+extern FMOD_SYSTEM *player;
+extern FMOD_SOUND *backgroundMusic;
+extern FMOD_CHANNEL *musicChannel;
 
-    bool initialize();
-    void update();
+bool initializeSoundSystem();
+void updateSoundSystem();
+void playBackgroundMusic(const std::string& filePath);
+void stopBackgroundMusic();
+void playSoundEffect(const std::string& filePath);
+void setBackgroundMusicVolume(float volume);
+void cleanupSoundSystem();
 
-    void playBackgroundMusic(const std::string& filePath);
-    void stopBackgroundMusic();
-    void playRandomMusic(const std::vector<std::string>& filePaths);
-    void playSoundEffect(const std::string& filePath);
-    void setBackgroundMusicVolume(float volume);
-
-    static SoundManager& getInstance() {
-        static SoundManager instance;
-        return instance;
-    }
-
-private:
-    FMOD_SYSTEM *system;
-    FMOD_SOUND *backgroundMusic;
-    FMOD_CHANNEL *musicChannel;
-};
-
-
-#endif // MEDIAPLAYER_HPP
+#endif // SOUND_HPP

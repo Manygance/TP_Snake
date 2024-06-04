@@ -173,10 +173,28 @@ public:
                 "}"
         );
 
+        const auto volumeButton = new QPushButton("Toggle Volume", this);
+        volumeButton->setFont(QFont(fontFamily, 12));
+        volumeButton->setGeometry(0, 0, 160, 20);
+        volumeButton->move(40, 190);
+        volumeButton->setCursor(Qt::PointingHandCursor);
+        volumeButton->setStyleSheet(
+                "QPushButton {"
+                "    background-color: transparent;"
+                "    border: none;"
+                "    color: white;"
+                "    font-size: 16px;"
+                "    text-align: left;"
+                "}"
+                "QPushButton:hover {"
+                "    color: yellow;"
+                "}"
+        );
+
         const auto exitButton = new QPushButton("Exit", this);
         exitButton->setFont(QFont(fontFamily, 12));
         exitButton->setGeometry(0, 0, 160, 20);
-        exitButton->move(40, 190);
+        exitButton->move(40, 220);
         exitButton->setCursor(Qt::PointingHandCursor);
         exitButton->setStyleSheet(
                 "QPushButton {"
@@ -191,23 +209,7 @@ public:
                 "}"
         );
 
-        const auto volumeButton = new QPushButton("Toggle Volume", this);
-        volumeButton->setFont(QFont(fontFamily, 12));
-        volumeButton->setGeometry(0, 0, 160, 20);
-        volumeButton->move(40, 220);
-        volumeButton->setCursor(Qt::PointingHandCursor);
-        volumeButton->setStyleSheet(
-                "QPushButton {"
-                "    background-color: transparent;"
-                "    border: none;"
-                "    color: white;"
-                "    font-size: 16px;"
-                "    text-align: left;"
-                "}"
-                "QPushButton:hover {"
-                "    color: yellow;"
-                "}"
-        );
+
 
         connect(volumeButton, &QPushButton::clicked, this, &MainMenu::toggleVolume);
 
@@ -231,8 +233,7 @@ public slots:
     void toggleVolume() {
         volumeOn = !volumeOn;
         float volume = volumeOn ? 1.0f : 0.0f; // Volume 100% ou 0%
-        SoundManager::getInstance().setBackgroundMusicVolume(volume);
-        cout << "Volume " << (volumeOn ? "on" : "off") << endl;
+        setBackgroundMusicVolume(volume);
     }
 
 private:
