@@ -2,6 +2,7 @@
 #include "snakewindow.hpp"
 #include "gamewindow.hpp"
 #include <QMainWindow>
+#include "sound.hpp"
 
 using namespace std;
 
@@ -9,7 +10,7 @@ SnakeWindow::SnakeWindow(QWidget *pParent, Qt::WindowFlags flags):QMainWindow(pP
 {
 
     this->setWindowTitle("Snake by Thomas and Bastien");
-    this->resize(COLONNES_FENETRE*TAILLE_CASE, LIGNES_FENETRE*TAILLE_CASE);
+    this->setFixedSize(COLONNES_FENETRE*TAILLE_CASE, LIGNES_FENETRE*TAILLE_CASE);
 
     stackedWidget = new QStackedWidget(this);
     mainMenu = new MainMenu(this);
@@ -21,6 +22,13 @@ SnakeWindow::SnakeWindow(QWidget *pParent, Qt::WindowFlags flags):QMainWindow(pP
     connect(mainMenu, &MainMenu::exitClicked, this, &SnakeWindow::handleExitClicked);
     connect(mainMenu, &MainMenu::createMapClicked, this, &SnakeWindow::handleCreateMapClicked);
 
+    if (!soundManager.initialize()) {
+        cout << "Failed to initialize sound manager" << endl;
+    } else {
+        soundManager.playBackgroundMusic("./data/Music_Menu.mp3");
+        soundManager.setBackgroundMusicVolume(0.25f);
+    }
+
 }
 
 void SnakeWindow::handlePlayClicked(int level) {
@@ -28,6 +36,8 @@ void SnakeWindow::handlePlayClicked(int level) {
     GameWindow *gameWindow = new GameWindow();
     stackedWidget->addWidget(gameWindow);
     stackedWidget->setCurrentWidget(gameWindow);
+    soundManager.stopBackgroundMusic();
+    soundManager.playBackgroundMusic("./data/Music_Game.mp3");
     gameWindow->setLevel(level);
     gameWindow->startGame();
 }

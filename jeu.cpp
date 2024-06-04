@@ -3,12 +3,11 @@
 #include <cassert>
 #include "jeu.hpp"
 #include "global_settings.hpp"
+#include "sound.hpp"
 
 using namespace std;
 
-Position::Position()
-{
-}
+Position::Position(){}
 
 Position::Position(int a, int b)
 {
@@ -42,6 +41,7 @@ Jeu::Jeu()
     Pos_Fruit.y = rand()%(hauteur-1);
     char terrain_defaut[LIGNES][COLONNES]={0};
     level = LEVEL;
+    score = 0;
 }
 
 Jeu::Jeu(const Jeu &jeu):snake(jeu.snake)
@@ -53,6 +53,8 @@ Jeu::Jeu(const Jeu &jeu):snake(jeu.snake)
     Pos_Fruit.x = rand()%(largeur-1);
     Pos_Fruit.y = rand()%(hauteur-1);
     level = LEVEL;
+    score = 0;
+
     char terrain_defaut[LIGNES][COLONNES]={0};
     
     if (jeu.terrain!=nullptr)
@@ -97,13 +99,12 @@ bool Jeu::init()
 	int x, y;
     started = false;
     dirSnake = DROITE;
+    score = 0;
 
     readLevel();
 
 	largeur = COLONNES;
 	hauteur = LIGNES;
-
-
 
 	terrain = new Case[largeur*hauteur];
 
@@ -115,7 +116,6 @@ bool Jeu::init()
                 terrain[y*largeur+x] = SOL;
             else
                 terrain[y*largeur+x] = DEBUG;
-
 
     while (terrain[Pos_Fruit.y*largeur+Pos_Fruit.x] != SOL)
     {
@@ -255,6 +255,7 @@ void Jeu::Add_Fruit_Random()
 
 void Jeu::Remove_Fruit(Position pos)
 {
+    score += 10;
     terrain[pos.y*largeur+pos.x] = SOL;
 }
 

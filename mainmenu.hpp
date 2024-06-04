@@ -9,6 +9,8 @@
 #include <QLabel>
 #include <QFontDatabase>
 #include <iostream>
+#include "sound.hpp"
+#include <QSlider>
 
 using namespace std;
 
@@ -49,10 +51,8 @@ public:
         textBoxLabel->setGeometry(textBox.rect());
         textBoxLabel->move(0, 480);
 
-        // Titre
-        QString fontPath = "./data/font.ttf";
-
         // Enregistrer la police
+        QString fontPath = "./data/font.ttf";
         int fontId = QFontDatabase::addApplicationFont(fontPath);
         if (fontId == -1) {
             cerr << "Erreur lors du chargement de la police d'écriture" << endl;
@@ -65,6 +65,7 @@ public:
         text_1->setFont(QFont(fontFamily, 12));
         text_1->setStyleSheet(
                 "color: white;"
+                "font-size: 16px;"
                 "padding-top: 510px;"
                 "padding-left: 30px;"
                 );
@@ -74,6 +75,7 @@ public:
         text_2->setFont(QFont(fontFamily, 12));
         text_2->setStyleSheet(
                 "color: white;"
+                "font-size: 16px;"
                 "padding-top: 530px;"
                 "padding-left: 30px;"
                 );
@@ -91,6 +93,7 @@ public:
                 "    background-color: transparent;"
                 "    border: none;"
                 "    color: white;"
+                "    font-size: 16px;"
                 "    text-align: left;"
                 "}"
                 "QPushButton:hover {"
@@ -108,6 +111,7 @@ public:
                 "    background-color: transparent;"
                 "    border: none;"
                 "    color: white;"
+                "    font-size: 16px;"
                 "    text-align: left;"
                 "}"
                 "QPushButton:hover {"
@@ -125,6 +129,7 @@ public:
                 "    background-color: transparent;"
                 "    border: none;"
                 "    color: white;"
+                "    font-size: 16px;"
                 "    text-align: left;"
                 "}"
                 "QPushButton:hover {"
@@ -142,6 +147,7 @@ public:
                 "    background-color: transparent;"
                 "    border: none;"
                 "    color: white;"
+                "    font-size: 16px;"
                 "    text-align: left;"
                 "}"
                 "QPushButton:hover {"
@@ -159,6 +165,7 @@ public:
                 "    background-color: transparent;"
                 "    border: none;"
                 "    color: white;"
+                "    font-size: 16px;"
                 "    text-align: left;"
                 "}"
                 "QPushButton:hover {"
@@ -176,12 +183,33 @@ public:
                 "    background-color: transparent;"
                 "    border: none;"
                 "    color: white;"
+                "    font-size: 16px;"
                 "    text-align: left;"
                 "}"
                 "QPushButton:hover {"
                 "    color: yellow;"
                 "}"
         );
+
+        const auto volumeButton = new QPushButton("Toggle Volume", this);
+        volumeButton->setFont(QFont(fontFamily, 12));
+        volumeButton->setGeometry(0, 0, 160, 20);
+        volumeButton->move(40, 220);
+        volumeButton->setCursor(Qt::PointingHandCursor);
+        volumeButton->setStyleSheet(
+                "QPushButton {"
+                "    background-color: transparent;"
+                "    border: none;"
+                "    color: white;"
+                "    font-size: 16px;"
+                "    text-align: left;"
+                "}"
+                "QPushButton:hover {"
+                "    color: yellow;"
+                "}"
+        );
+
+        connect(volumeButton, &QPushButton::clicked, this, &MainMenu::toggleVolume);
 
         connect(playEmptyButton, &QPushButton::clicked, this, [this]() { this->playClicked(0); });
         connect(playMaze1Button, &QPushButton::clicked, this, [this]() { this->playClicked(1); });
@@ -198,7 +226,21 @@ signals:
     void exitClicked();
 
     void createMapClicked();
+
+public slots:
+    void toggleVolume() {
+        volumeOn = !volumeOn;
+        float volume = volumeOn ? 1.0f : 0.0f; // Volume 100% ou 0%
+        SoundManager::getInstance().setBackgroundMusicVolume(volume);
+        cout << "Volume " << (volumeOn ? "on" : "off") << endl;
+    }
+
+private:
+    bool volumeOn;
+
 };
+
+
 
 
 #endif //MAINMENU_HPP

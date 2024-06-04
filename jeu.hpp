@@ -30,6 +30,7 @@ class Jeu
     bool pause;
     bool started;
     char terrain_defaut[LIGNES][COLONNES];
+    int score;
 
     
   public:
@@ -88,6 +89,10 @@ class Jeu
 
     Direction getDirection() const {
         return dirSnake;
+    }
+
+    int getScore() const {
+        return score;
     }
 };
 

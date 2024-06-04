@@ -29,7 +29,7 @@ add_executable(Snake ${RESOURCE_ADDED}
         gamewindow.hpp
         gamewindow.cpp
         global_settings.hpp
-        )
+        sound.cpp sound.hpp)
 
 target_link_libraries(Snake
         Qt5::Core

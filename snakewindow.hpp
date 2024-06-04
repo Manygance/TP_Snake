@@ -7,6 +7,7 @@
 #include <QStackedWidget>
 #include "jeu.hpp"
 #include "mainmenu.hpp"
+#include "sound.hpp"
 
 class SnakeWindow : public QMainWindow {
 
@@ -18,19 +19,12 @@ class SnakeWindow : public QMainWindow {
 
     QStackedWidget *stackedWidget;
     MainMenu *mainMenu;
+    SoundManager soundManager; // Déclarez le SoundManager ici
 
   public:
     SnakeWindow(QWidget *pParent=nullptr, Qt::WindowFlags flags=Qt::WindowFlags());
 
   protected:
-    /*
-    void paintEvent(QPaintEvent *);
-    void keyPressEvent(QKeyEvent *);
-    void Clicked_Add_Wall();
-    void Clicked_Remove_Wall();
-    void handleTimer();
-     */
-
     void paintEvent(QPaintEvent *event);
 
     void handlePlayClicked(int level);

@@ -20,6 +20,8 @@ protected:
     QPixmap bodyVertical, bodyHorizontal, bodyTopLeft, bodyTopRight, bodyBottomLeft, bodyBottomRight, headUp, headDown, headLeft, headRight, tailUp, tailDown, tailLeft, tailRight;
     QPixmap background;
     QPixmap debug, textBox;
+    QLabel *notStartedText;
+    QLabel *scoreText;
 
 public:
     GameWindow();
