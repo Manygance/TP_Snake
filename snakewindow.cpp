@@ -1,6 +1,7 @@
 #include <iostream>
 #include "snakewindow.hpp"
 #include "gamewindow.hpp"
+#include "editorwindow.hpp"
 #include <QMainWindow>
 #include "sound.hpp"
 
@@ -48,7 +49,14 @@ void SnakeWindow::handleExitClicked() {
 
 void SnakeWindow::handleCreateMapClicked() {
     //cout << "Create map clicked" << endl;
-    //stackedWidget->setCurrentWidget(mapEditor);
+    EditorWindow *mapEditor = new EditorWindow();
+    stackedWidget->addWidget(mapEditor);
+    stackedWidget->setCurrentWidget(mapEditor);
+
+    stopBackgroundMusic();
+    playBackgroundMusic("./data/Music_Game.mp3");
+
+    mapEditor->startEditor();
 }
 
 void SnakeWindow::paintEvent(QPaintEvent *event) {

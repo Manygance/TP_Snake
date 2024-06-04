@@ -96,34 +96,14 @@ Jeu &Jeu::operator=(const Jeu &jeu)
 
 bool Jeu::init()
 {
-	int x, y;
+
     started = false;
     dirSnake = DROITE;
     score = 0;
 
     readLevel();
-
-	largeur = COLONNES;
-	hauteur = LIGNES;
-
-	terrain = new Case[largeur*hauteur];
-
-	for(y=0;y<LIGNES;++y)
-		for(x=0;x<COLONNES;++x)
-            if (terrain_defaut[y][x]=='#')
-                terrain[y*largeur+x] = MUR;
-            else if (terrain_defaut[y][x]=='.')
-                terrain[y*largeur+x] = SOL;
-            else
-                terrain[y*largeur+x] = DEBUG;
-
-    while (terrain[Pos_Fruit.y*largeur+Pos_Fruit.x] != SOL)
-    {
-        Pos_Fruit.x = rand()%(largeur-1);
-        Pos_Fruit.y = rand()%(hauteur-1);
-    }
-
-    terrain[Pos_Fruit.y*largeur+Pos_Fruit.x] = FRUIT;
+    initLevel();
+    initFruit();
 
     int longueurSerpent = 5;
     snake.clear();
@@ -262,6 +242,57 @@ void Jeu::Remove_Fruit(Position pos)
 
 void Jeu::readLevel(){
 
+    ifstream file(getLevelTxT());
+
+    if (!file.is_open()) {
+        cerr << "Impossible d'ouvrir le fichier." << endl;
+        return;
+    }
+
+    char c;
+    for (int i = 0; i < LIGNES; ++i) {
+        for (int j = 0; j < COLONNES+1; ++j) {
+            if (file.get(c)) {
+                this->terrain_defaut[i][j] = c;
+            }
+        }
+    }
+
+    file.close();
+}
+
+void Jeu::initLevel(){
+
+    int x, y;
+    largeur = COLONNES;
+    hauteur = LIGNES;
+
+    terrain = new Case[largeur*hauteur];
+
+    for(y=0;y<LIGNES;++y)
+        for(x=0;x<COLONNES;++x)
+            if (terrain_defaut[y][x]=='#')
+                terrain[y*largeur+x] = MUR;
+            else if (terrain_defaut[y][x]=='.')
+                terrain[y*largeur+x] = SOL;
+            else
+                terrain[y*largeur+x] = DEBUG;
+}
+
+void Jeu::initFruit(){
+
+    while (terrain[Pos_Fruit.y*largeur+Pos_Fruit.x] != SOL)
+    {
+        Pos_Fruit.x = rand()%(largeur-1);
+        Pos_Fruit.y = rand()%(hauteur-1);
+    }
+
+    terrain[Pos_Fruit.y*largeur+Pos_Fruit.x] = FRUIT;
+
+}
+
+string Jeu::getLevelTxT() {
+
     string file_path;
 
     switch (level) {
@@ -287,21 +318,5 @@ void Jeu::readLevel(){
             break;
     }
 
-    ifstream file(file_path);
-
-    if (!file.is_open()) {
-        cerr << "Impossible d'ouvrir le fichier." << endl;
-        return;
-    }
-
-    char c;
-    for (int i = 0; i < LIGNES; ++i) {
-        for (int j = 0; j < COLONNES+1; ++j) {
-            if (file.get(c)) {
-                this->terrain_defaut[i][j] = c;
-            }
-        }
-    }
-
-    file.close();
+    return file_path;
 }

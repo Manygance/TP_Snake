@@ -1,8 +1,8 @@
 //
-// Created by Maný on 5/1/2024.
+// Created by Maný on 6/4/2024.
 //
 
-#include "gamewindow.hpp"
+#include "editorwindow.hpp"
 #include <QPainter>
 #include <QTimer>
 #include <QLabel>
@@ -12,7 +12,7 @@
 
 using namespace std;
 
-GameWindow::GameWindow()
+EditorWindow::EditorWindow()
 {
     // Images récupérées ici : https://rembound.com/articles/creating-a-snake-game-tutorial-with-html5
     if(bodyVertical.load("./data/body_vertical.png")==false or
@@ -44,7 +44,7 @@ GameWindow::GameWindow()
     background.load(backgroundImagePath);
 
     auto *timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, &GameWindow::handleTimer);
+    connect(timer, &QTimer::timeout, this, &EditorWindow::handleTimer);
     timer->start(100);
 
     QString fontPath = "./data/font.ttf";
@@ -56,21 +56,63 @@ GameWindow::GameWindow()
 
     QString fontFamily = QFontDatabase::applicationFontFamilies(fontId).at(0);
 
-    notStartedText = new QLabel("Appuyer sur une touche pour commencer", this);
-    notStartedText->setFont(QFont(fontFamily, 12));
-    notStartedText->setGeometry(30, 510, 480, 20);
-    notStartedText->setStyleSheet("color: white; font-size: 16px;");
-    notStartedText->show();
+    const auto Maze_1_Button = new QPushButton("Maze 1", this);
+    Maze_1_Button->setFont(QFont(fontFamily, 12));
+    Maze_1_Button->setGeometry(0, 0, 160, 20);
+    Maze_1_Button->move(40, 520);
+    Maze_1_Button->setCursor(Qt::PointingHandCursor);
+    Maze_1_Button->setStyleSheet(
+            "QPushButton {"
+            "    background-color: transparent;"
+            "    border: none;"
+            "    color: white;"
+            "    font-size: 16px;"
+            "    text-align: left;"
+            "}"
+            "QPushButton:hover {"
+            "    color: yellow;"
+            "}"
+    );
 
-    scoreText = new QLabel(this);
-    scoreText->setFont(QFont(fontFamily, 12));
-    scoreText->setGeometry(30, 540, 480, 20);
-    scoreText->setStyleSheet("color: white; font-size: 16px;");
-    scoreText->hide();
+    const auto Maze_2_Button = new QPushButton("Maze 2", this);
+    Maze_2_Button->setFont(QFont(fontFamily, 12));
+    Maze_2_Button->setGeometry(0, 0, 160, 20);
+    Maze_2_Button->move(280, 520);
+    Maze_2_Button->setCursor(Qt::PointingHandCursor);
+    Maze_2_Button->setStyleSheet(
+            "QPushButton {"
+            "    background-color: transparent;"
+            "    border: none;"
+            "    color: white;"
+            "    font-size: 16px;"
+            "    text-align: left;"
+            "}"
+            "QPushButton:hover {"
+            "    color: yellow;"
+            "}"
+    );
+
+    const auto Personnalized_Button = new QPushButton("Personalized", this);
+    Personnalized_Button->setFont(QFont(fontFamily, 12));
+    Personnalized_Button->setGeometry(0, 0, 160, 20);
+    Personnalized_Button->move(460, 520);
+    Personnalized_Button->setCursor(Qt::PointingHandCursor);
+    Personnalized_Button->setStyleSheet(
+            "QPushButton {"
+            "    background-color: transparent;"
+            "    border: none;"
+            "    color: white;"
+            "    font-size: 16px;"
+            "    text-align: left;"
+            "}"
+            "QPushButton:hover {"
+            "    color: yellow;"
+            "}"
+    );
 
 }
 
-void GameWindow::paintEvent(QPaintEvent *) {
+void EditorWindow::paintEvent(QPaintEvent *) {
     QPainter painter(this);
 
     Position pos;
@@ -216,6 +258,13 @@ void GameWindow::paintEvent(QPaintEvent *) {
                     painter.drawPixmap(posCorps.x * largeurCase, posCorps.y * hauteurCase, debug); // pour le debug
             }
         }
+
+        // Afficher la textbox
+
+
+
+
+
     }
 
 
@@ -223,18 +272,9 @@ void GameWindow::paintEvent(QPaintEvent *) {
 
     //cout<<jeu.GetStarted()<<"  "<<jeu.getScore()<<endl;
 
-    if (!jeu.GetStarted()) {
-        notStartedText->show();
-        scoreText->hide();
-    } else {
-        notStartedText->hide();
-        scoreText->setText("Score : " + QString::number(jeu.getScore()));
-        scoreText->show();
-
-    }
 }
 
-void GameWindow::keyPressEvent(QKeyEvent *event)
+void EditorWindow::keyPressEvent(QKeyEvent *event)
 {
     if (event->key()==Qt::Key_Space)
     {
@@ -278,16 +318,24 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
     update();
 }
 
-void GameWindow::handleTimer()
+void EditorWindow::handleTimer()
 {
-    jeu.evolue();
+    jeu.readLevel();
+    jeu.initLevel();
+
+    //cout<<jeu.getCase(1,1)<<endl;
+    //if(jeu.getCase(1,1) == '.')
+        jeu.setCase(1,1,'*');
+    //else
+    //    jeu.setCase(1,1,'.');
     update();
 }
 
 
-void GameWindow::startGame()
+void EditorWindow::startEditor()
 {
-    jeu.init();
+    jeu.readLevel();
+    jeu.initLevel();
     initGrid();
     update();
 }

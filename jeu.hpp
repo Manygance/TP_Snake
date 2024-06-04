@@ -3,6 +3,7 @@
 
 #include <list>
 #include "global_settings.hpp"
+#include <iostream>
 
 typedef enum {SOL, MUR, FRUIT, DEBUG} Case;
 typedef enum {GAUCHE, DROITE, HAUT, BAS} Direction;
@@ -82,6 +83,18 @@ class Jeu
     }
 
     void readLevel();
+    void initLevel();
+    void initFruit();
+
+    char getCase(int x, int y){
+        return terrain_defaut[y][x];
+    }
+
+    void setCase(int x, int y, char c){
+        terrain_defaut[y][x] = c;
+    }
+
+    std::string getLevelTxT();
 
     void setLevel(int level) {
         this->level = level;
