@@ -16,13 +16,17 @@ Q_OBJECT
 
 protected:
     Jeu jeu;
-    QPixmap floor, wall, fruit;
+    QPixmap fruit;
     QPixmap bodyVertical, bodyHorizontal, bodyTopLeft, bodyTopRight, bodyBottomLeft, bodyBottomRight, headUp, headDown, headLeft, headRight, tailUp, tailDown, tailLeft, tailRight;
     QPixmap background;
     QPixmap debug, textBox;
+    std::string  levelBackground;
 
 public:
     EditorWindow();
+    std::string getLevelBackground();
+    void setLevelBackground(const std::string& background);
+    void applyLevelBackground();
     void paintEvent(QPaintEvent *);
     void keyPressEvent(QKeyEvent *);
     void startEditor();

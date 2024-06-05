@@ -9,39 +9,39 @@
 #include "global_settings.hpp"
 #include <iostream>
 #include "jeu.hpp"
+#include <fstream>
 
 using namespace std;
 
-GameWindow::GameWindow()
+GameWindow::GameWindow(int level)
 {
+
+    jeu.setLevel(level);
+
     // Images récupérées ici : https://rembound.com/articles/creating-a-snake-game-tutorial-with-html5
-    if(bodyVertical.load("./data/body_vertical.png")==false or
-       bodyHorizontal.load("./data/body_horizontal.png")==false or
-       bodyTopLeft.load("./data/body_top_left.png")==false or
-       bodyTopRight.load("./data/body_top_right.png")==false or
-       bodyBottomLeft.load("./data/body_bottom_left.png")==false or
-       bodyBottomRight.load("./data/body_bottom_right.png")==false or
-       headUp.load("./data/head_up.png")==false or
-       headDown.load("./data/head_down.png")==false or
-       headLeft.load("./data/head_left.png")==false or
-       headRight.load("./data/head_right.png")==false or
-       tailUp.load("./data/tail_up.png")==false or
-       tailDown.load("./data/tail_down.png")==false or
-       tailLeft.load("./data/tail_left.png")==false or
-       tailRight.load("./data/tail_right.png")==false or
-       wall.load("./data/wall.png")==false or
-       fruit.load("./data/fruit.png")==false or
-       floor.load("./data/floor.png")==false or
-       debug.load("./data/debug.png")==false or
-       textBox.load("./data/textbox.png")==false)
+    if(!bodyVertical.load("./data/body_vertical.png") or
+       !bodyHorizontal.load("./data/body_horizontal.png") or
+       !bodyTopLeft.load("./data/body_top_left.png") or
+       !bodyTopRight.load("./data/body_top_right.png") or
+       !bodyBottomLeft.load("./data/body_bottom_left.png") or
+       !bodyBottomRight.load("./data/body_bottom_right.png") or
+       !headUp.load("./data/head_up.png") or
+       !headDown.load("./data/head_down.png") or
+       !headLeft.load("./data/head_left.png") or
+       !headRight.load("./data/head_right.png") or
+       !tailUp.load("./data/tail_up.png") or
+       !tailDown.load("./data/tail_down.png") or
+       !tailLeft.load("./data/tail_left.png") or
+       !tailRight.load("./data/tail_right.png") or
+       !textBox.load("./data/textbox.png") or
+       !debug.load("./data/debug.png") or
+       !fruit.load("./data/fruit.png"))
     {
         cerr<<"Erreur lors du chargement des images"<<endl;
         exit(1);
     }
 
-    int randomIndex = QRandomGenerator::global()->bounded(1, 6); // Génère un nombre entre 1 et 5 inclusivement
-    QString backgroundImagePath = QString("./data/BG_%1.png").arg(randomIndex);
-    background.load(backgroundImagePath);
+    readLevelBackground();
 
     auto *timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &GameWindow::handleTimer);
@@ -70,71 +70,75 @@ GameWindow::GameWindow()
 
 }
 
+void GameWindow::readLevelBackground() {
+    ifstream file(jeu.getLevelTxT());
+    string firstLine;
+    getline(file, firstLine);
+    file.close();
+
+    QString backgroundImagePath = QString::fromStdString(firstLine);
+    background.load(backgroundImagePath);
+}
+
 void GameWindow::paintEvent(QPaintEvent *) {
     QPainter painter(this);
 
     Position pos;
 
-    // Taille des cases en pixels
-    int largeurCase, hauteurCase;
-
-    largeurCase = wall.width();
-    hauteurCase = wall.height();
-
     // Dessine les cases
     for (pos.y = 0; pos.y < jeu.getNbCasesY(); pos.y++)
         for (pos.x = 0; pos.x < jeu.getNbCasesX(); pos.x++)
             if (jeu.getCase(pos) == MUR) {
-                //painter.drawPixmap(pos.x*largeurCase, pos.y*hauteurCase, wall);
+                //painter.drawPixmap(pos.x*TAILLE_CASE, pos.y*TAILLE_CASE, wall);
                 QRect sourceRect(9 + 4 * 25, 163 + 4 * 25, 24, 24);
-                QRect destRect(pos.x * largeurCase, pos.y * hauteurCase, 32, 32);
+                QRect destRect(pos.x * TAILLE_CASE, pos.y * TAILLE_CASE, 32, 32);
                 painter.drawPixmap(destRect, background, sourceRect);
             } else if (jeu.getCase(pos) == FRUIT) {
                 QRect sourceRect = grid[pos];
-                QRect destRect(pos.x * largeurCase, pos.y * hauteurCase, 32, 32);
+                QRect destRect(pos.x * TAILLE_CASE, pos.y * TAILLE_CASE, 32, 32);
                 painter.drawPixmap(destRect, background, sourceRect);
-                painter.drawPixmap(pos.x * largeurCase, pos.y * hauteurCase, fruit);
+                painter.drawPixmap(pos.x * TAILLE_CASE, pos.y * TAILLE_CASE, fruit);
             } else if (jeu.getCase(pos) == SOL) {
                 QRect sourceRect = grid[pos];
-                QRect destRect(pos.x * largeurCase, pos.y * hauteurCase, 32, 32);
+                QRect destRect(pos.x * TAILLE_CASE, pos.y * TAILLE_CASE, 32, 32);
                 painter.drawPixmap(destRect, background, sourceRect);
             } else
-                painter.drawPixmap(pos.x * largeurCase, pos.y * hauteurCase, debug);
+                painter.drawPixmap(pos.x * TAILLE_CASE, pos.y * TAILLE_CASE, debug);
 
     // Pour l'affichage au niveau de la text box
     for (pos.y = jeu.getNbCasesY(); pos.y < jeu.getNbCasesY() + 5; pos.y++)
         for (pos.x = 0; pos.x < jeu.getNbCasesX(); pos.x++) {
             if (pos.x == 0 and pos.y == 15) {
                 QRect sourceRect(9 + 3 * 25, 163 + 0 * 25, 24, 24);
-                QRect destRect(pos.x * largeurCase, pos.y * hauteurCase, 32, 32);
+                QRect destRect(pos.x * TAILLE_CASE, pos.y * TAILLE_CASE, 32, 32);
                 painter.drawPixmap(destRect, background, sourceRect);
             } else if (pos.x == 19 and pos.y == 15) {
                 QRect sourceRect(9 + 5 * 25, 163 + 0 * 25, 24, 24);
-                QRect destRect(pos.x * largeurCase, pos.y * hauteurCase, 32, 32);
+                QRect destRect(pos.x * TAILLE_CASE, pos.y * TAILLE_CASE, 32, 32);
                 painter.drawPixmap(destRect, background, sourceRect);
             } else if (pos.x == 0 and pos.y == 19) {
                 QRect sourceRect(9 + 3 * 25, 163 + 2 * 25, 24, 24);
-                QRect destRect(pos.x * largeurCase, pos.y * hauteurCase, 32, 32);
+                QRect destRect(pos.x * TAILLE_CASE, pos.y * TAILLE_CASE, 32, 32);
                 painter.drawPixmap(destRect, background, sourceRect);
             } else if (pos.x == 19 and pos.y == 19) {
                 QRect sourceRect(9 + 5 * 25, 163 + 2 * 25, 24, 24);
-                QRect destRect(pos.x * largeurCase, pos.y * hauteurCase, 32, 32);
+                QRect destRect(pos.x * TAILLE_CASE, pos.y * TAILLE_CASE, 32, 32);
                 painter.drawPixmap(destRect, background, sourceRect);
             } else if (pos.x == 19) {
                 QRect sourceRect(9 + 5 * 25, 163 + 1 * 25, 24, 24);
-                QRect destRect(pos.x * largeurCase, pos.y * hauteurCase, 32, 32);
+                QRect destRect(pos.x * TAILLE_CASE, pos.y * TAILLE_CASE, 32, 32);
                 painter.drawPixmap(destRect, background, sourceRect);
             } else if (pos.x == 0) {
                 QRect sourceRect(9 + 3 * 25, 163 + 1 * 25, 24, 24);
-                QRect destRect(pos.x * largeurCase, pos.y * hauteurCase, 32, 32);
+                QRect destRect(pos.x * TAILLE_CASE, pos.y * TAILLE_CASE, 32, 32);
                 painter.drawPixmap(destRect, background, sourceRect);
             } else if (pos.y == 15) {
                 QRect sourceRect(9 + 4 * 25, 163 + 0 * 25, 24, 24);
-                QRect destRect(pos.x * largeurCase, pos.y * hauteurCase, 32, 32);
+                QRect destRect(pos.x * TAILLE_CASE, pos.y * TAILLE_CASE, 32, 32);
                 painter.drawPixmap(destRect, background, sourceRect);
             } else if (pos.y == 19) {
                 QRect sourceRect(9 + 4 * 25, 163 + 2 * 25, 24, 24);
-                QRect destRect(pos.x * largeurCase, pos.y * hauteurCase, 32, 32);
+                QRect destRect(pos.x * TAILLE_CASE, pos.y * TAILLE_CASE, 32, 32);
                 painter.drawPixmap(destRect, background, sourceRect);
             }
         }
@@ -151,13 +155,13 @@ void GameWindow::paintEvent(QPaintEvent *) {
 
         // Pour la tête
         if (jeu.getDirection() == 0)
-            painter.drawPixmap(posTete.x * largeurCase, posTete.y * hauteurCase, headLeft);
+            painter.drawPixmap(posTete.x * TAILLE_CASE, posTete.y * TAILLE_CASE, headLeft);
         else if (jeu.getDirection() == 1)
-            painter.drawPixmap(posTete.x * largeurCase, posTete.y * hauteurCase, headRight);
+            painter.drawPixmap(posTete.x * TAILLE_CASE, posTete.y * TAILLE_CASE, headRight);
         else if (jeu.getDirection() == 2)
-            painter.drawPixmap(posTete.x * largeurCase, posTete.y * hauteurCase, headUp);
+            painter.drawPixmap(posTete.x * TAILLE_CASE, posTete.y * TAILLE_CASE, headUp);
         else if (jeu.getDirection() == 3)
-            painter.drawPixmap(posTete.x * largeurCase, posTete.y * hauteurCase, headDown);
+            painter.drawPixmap(posTete.x * TAILLE_CASE, posTete.y * TAILLE_CASE, headDown);
 
         // Pour la queue
         const Position &posQueue = snake.back();
@@ -168,14 +172,14 @@ void GameWindow::paintEvent(QPaintEvent *) {
 
         if (posQueue.x == posAvantQueue.x)
             if (posQueue.y < posAvantQueue.y)
-                painter.drawPixmap(posQueue.x * largeurCase, posQueue.y * hauteurCase, tailDown);
+                painter.drawPixmap(posQueue.x * TAILLE_CASE, posQueue.y * TAILLE_CASE, tailDown);
             else if (posQueue.y > posAvantQueue.y)
-                painter.drawPixmap(posQueue.x * largeurCase, posQueue.y * hauteurCase, tailUp);
+                painter.drawPixmap(posQueue.x * TAILLE_CASE, posQueue.y * TAILLE_CASE, tailUp);
         if (posQueue.y == posAvantQueue.y)
             if (posQueue.x < posAvantQueue.x)
-                painter.drawPixmap(posQueue.x * largeurCase, posQueue.y * hauteurCase, tailRight);
+                painter.drawPixmap(posQueue.x * TAILLE_CASE, posQueue.y * TAILLE_CASE, tailRight);
             else if (posQueue.x > posAvantQueue.x)
-                painter.drawPixmap(posQueue.x * largeurCase, posQueue.y * hauteurCase, tailLeft);
+                painter.drawPixmap(posQueue.x * TAILLE_CASE, posQueue.y * TAILLE_CASE, tailLeft);
 
 
         // Pour le corps
@@ -191,29 +195,29 @@ void GameWindow::paintEvent(QPaintEvent *) {
                 if (posPrec.x < posCorps.x && posNext.x > posCorps.x ||
                     posNext.x < posCorps.x && posPrec.x > posCorps.x || posPrec.y == posNext.y)
                     // Horizontal
-                    painter.drawPixmap(posCorps.x * largeurCase, posCorps.y * hauteurCase, bodyHorizontal);
+                    painter.drawPixmap(posCorps.x * TAILLE_CASE, posCorps.y * TAILLE_CASE, bodyHorizontal);
                 else if (posPrec.x < posCorps.x && posNext.y > posCorps.y ||
                          posNext.x < posCorps.x && posPrec.y > posCorps.y)
                     // Angle Left-Down
-                    painter.drawPixmap(posCorps.x * largeurCase, posCorps.y * hauteurCase, bodyBottomLeft);
+                    painter.drawPixmap(posCorps.x * TAILLE_CASE, posCorps.y * TAILLE_CASE, bodyBottomLeft);
                 else if (posPrec.y < posCorps.y && posNext.y > posCorps.y ||
                          posNext.y < posCorps.y && posPrec.y > posCorps.y || posPrec.x == posNext.x)
                     // Vertical
-                    painter.drawPixmap(posCorps.x * largeurCase, posCorps.y * hauteurCase, bodyVertical);
+                    painter.drawPixmap(posCorps.x * TAILLE_CASE, posCorps.y * TAILLE_CASE, bodyVertical);
                 else if (posPrec.y < posCorps.y && posNext.x < posCorps.x ||
                          posNext.y < posCorps.y && posPrec.x < posCorps.x)
                     // Angle Top-Left
-                    painter.drawPixmap(posCorps.x * largeurCase, posCorps.y * hauteurCase, bodyTopLeft);
+                    painter.drawPixmap(posCorps.x * TAILLE_CASE, posCorps.y * TAILLE_CASE, bodyTopLeft);
                 else if (posPrec.x > posCorps.x && posNext.y < posCorps.y ||
                          posNext.x > posCorps.x && posPrec.y < posCorps.y)
                     // Angle Right-Up
-                    painter.drawPixmap(posCorps.x * largeurCase, posCorps.y * hauteurCase, bodyTopRight);
+                    painter.drawPixmap(posCorps.x * TAILLE_CASE, posCorps.y * TAILLE_CASE, bodyTopRight);
                 else if (posPrec.y > posCorps.y && posNext.x > posCorps.x ||
                          posNext.y > posCorps.y && posPrec.x > posCorps.x)
                     // Angle Down-Right
-                    painter.drawPixmap(posCorps.x * largeurCase, posCorps.y * hauteurCase, bodyBottomRight);
+                    painter.drawPixmap(posCorps.x * TAILLE_CASE, posCorps.y * TAILLE_CASE, bodyBottomRight);
                 else
-                    painter.drawPixmap(posCorps.x * largeurCase, posCorps.y * hauteurCase, debug); // pour le debug
+                    painter.drawPixmap(posCorps.x * TAILLE_CASE, posCorps.y * TAILLE_CASE, debug); // pour le debug
             }
         }
     }

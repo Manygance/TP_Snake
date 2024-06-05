@@ -239,12 +239,14 @@ void Jeu::readLevel(){
         return;
     }
 
-    char c;
+    string line;
+
+    getline(file, line); // lire la première ligne et l'ignore
+
     for (int i = 0; i < LIGNES; ++i) {
-        for (int j = 0; j < COLONNES+1; ++j) {
-            if (file.get(c)) {
-                this->terrain_defaut[i][j] = c;
-            }
+        getline(file, line);
+        for (int j = 0; j < line.size(); ++j) {
+            this->terrain_defaut[i][j] = line[j];
         }
     }
 

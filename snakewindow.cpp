@@ -30,11 +30,9 @@ SnakeWindow::SnakeWindow(QWidget *pParent, Qt::WindowFlags flags):QMainWindow(pP
 
 void SnakeWindow::handlePlayClicked(int level) {
     //cout << "Play map clicked" << endl;
-    GameWindow *gameWindow = new GameWindow();
+    GameWindow *gameWindow = new GameWindow(level);
     stackedWidget->addWidget(gameWindow);
     stackedWidget->setCurrentWidget(gameWindow);
-
-    gameWindow->setLevel(level);
     gameWindow->startGame();
 
     stopBackgroundMusic();

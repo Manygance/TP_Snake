@@ -16,7 +16,7 @@ Q_OBJECT
 
 protected:
     Jeu jeu;
-    QPixmap floor, wall, fruit;
+    QPixmap fruit;
     QPixmap bodyVertical, bodyHorizontal, bodyTopLeft, bodyTopRight, bodyBottomLeft, bodyBottomRight, headUp, headDown, headLeft, headRight, tailUp, tailDown, tailLeft, tailRight;
     QPixmap background;
     QPixmap debug, textBox;
@@ -24,15 +24,12 @@ protected:
     QLabel *scoreText;
 
 public:
-    GameWindow();
+    GameWindow(int);
+    void readLevelBackground();
     void paintEvent(QPaintEvent *);
     void keyPressEvent(QKeyEvent *);
     void startGame();
     void handleTimer();
-
-    void setLevel(int level) {
-        this->jeu.level = level;
-    }
 
     QMap<Position, QRect> grid; // Associer chaque position de la grille à une source rect
 
