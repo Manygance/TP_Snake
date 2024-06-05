@@ -10,11 +10,6 @@ using namespace std;
 SnakeWindow::SnakeWindow(QWidget *pParent, Qt::WindowFlags flags):QMainWindow(pParent, flags)
 {
 
-    //setMouseTracking(true);
-
-    initializeSoundSystem();
-    //playBackgroundMusic("./data/Music_Title.mp3");
-
     this->setWindowTitle("Snake by Thomas and Bastien");
     this->setFixedSize(COLONNES_FENETRE*TAILLE_CASE, LIGNES_FENETRE*TAILLE_CASE);
 
@@ -28,6 +23,8 @@ SnakeWindow::SnakeWindow(QWidget *pParent, Qt::WindowFlags flags):QMainWindow(pP
     connect(mainMenu, &MainMenu::exitClicked, this, &SnakeWindow::handleExitClicked);
     connect(mainMenu, &MainMenu::createMapClicked, this, &SnakeWindow::handleCreateMapClicked);
 
+    initializeSoundSystem();
+    playBackgroundMusic("./data/Music_Title.mp3");
 
 }
 
@@ -37,11 +34,11 @@ void SnakeWindow::handlePlayClicked(int level) {
     stackedWidget->addWidget(gameWindow);
     stackedWidget->setCurrentWidget(gameWindow);
 
-    stopBackgroundMusic();
-    //playBackgroundMusic("./data/Music_Game.mp3");
-
     gameWindow->setLevel(level);
     gameWindow->startGame();
+
+    stopBackgroundMusic();
+    playBackgroundMusic("./data/Music_Game.mp3");
 }
 
 void SnakeWindow::handleExitClicked() {
@@ -55,10 +52,10 @@ void SnakeWindow::handleCreateMapClicked() {
     stackedWidget->addWidget(mapEditor);
     stackedWidget->setCurrentWidget(mapEditor);
 
-    stopBackgroundMusic();
-    //playBackgroundMusic("./data/Music_Game.mp3");
-
     mapEditor->startEditor();
+
+    stopBackgroundMusic();
+    playBackgroundMusic("./data/Music_Game.mp3");
 }
 
 void SnakeWindow::paintEvent(QPaintEvent *event) {

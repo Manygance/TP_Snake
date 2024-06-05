@@ -75,7 +75,7 @@ EditorWindow::EditorWindow()
 
     const auto Maze_2_Button = new QPushButton("Maze 2", this);
     Maze_2_Button->setFont(QFont(fontFamily, 12));
-    Maze_2_Button->setGeometry(0, 0, 160, 20);
+    Maze_2_Button->setGeometry(0, 0, 200, 20);
     Maze_2_Button->move(40, 550);
     Maze_2_Button->setCursor(Qt::PointingHandCursor);
     Maze_2_Button->setStyleSheet(
@@ -93,7 +93,7 @@ EditorWindow::EditorWindow()
 
     const auto Personnalized_Button = new QPushButton("Personalized", this);
     Personnalized_Button->setFont(QFont(fontFamily, 12));
-    Personnalized_Button->setGeometry(0, 0, 160, 20);
+    Personnalized_Button->setGeometry(0, 0, 200, 20);
     Personnalized_Button->move(40, 580);
     Personnalized_Button->setCursor(Qt::PointingHandCursor);
     Personnalized_Button->setStyleSheet(
@@ -109,10 +109,100 @@ EditorWindow::EditorWindow()
             "}"
     );
 
+    const auto Set_BG_1_Button = new QPushButton("Set background 1", this);
+    Set_BG_1_Button->setFont(QFont(fontFamily, 12));
+    Set_BG_1_Button->setGeometry(0, 0, 200, 20);
+    Set_BG_1_Button->move(210, 520);
+    Set_BG_1_Button->setCursor(Qt::PointingHandCursor);
+    Set_BG_1_Button->setStyleSheet(
+            "QPushButton {"
+            "    background-color: transparent;"
+            "    border: none;"
+            "    color: white;"
+            "    font-size: 16px;"
+            "    text-align: left;"
+            "}"
+            "QPushButton:hover {"
+            "    color: yellow;"
+            "}"
+    );
+
+    const auto Set_BG_2_Button = new QPushButton("Set background 2", this);
+    Set_BG_2_Button->setFont(QFont(fontFamily, 12));
+    Set_BG_2_Button->setGeometry(0, 0, 200, 20);
+    Set_BG_2_Button->move(210, 550);
+    Set_BG_2_Button->setCursor(Qt::PointingHandCursor);
+    Set_BG_2_Button->setStyleSheet(
+            "QPushButton {"
+            "    background-color: transparent;"
+            "    border: none;"
+            "    color: white;"
+            "    font-size: 16px;"
+            "    text-align: left;"
+            "}"
+            "QPushButton:hover {"
+            "    color: yellow;"
+            "}"
+    );
+
+    const auto Set_BG_3_Button = new QPushButton("Set background 3", this);
+    Set_BG_3_Button->setFont(QFont(fontFamily, 12));
+    Set_BG_3_Button->setGeometry(0, 0, 200, 20);
+    Set_BG_3_Button->move(210, 580);
+    Set_BG_3_Button->setCursor(Qt::PointingHandCursor);
+    Set_BG_3_Button->setStyleSheet(
+            "QPushButton {"
+            "    background-color: transparent;"
+            "    border: none;"
+            "    color: white;"
+            "    font-size: 16px;"
+            "    text-align: left;"
+            "}"
+            "QPushButton:hover {"
+            "    color: yellow;"
+            "}"
+    );
+
+    const auto Set_BG_4_Button = new QPushButton("Set background 4", this);
+    Set_BG_4_Button->setFont(QFont(fontFamily, 12));
+    Set_BG_4_Button->setGeometry(0, 0, 200, 20);
+    Set_BG_4_Button->move(420, 520);
+    Set_BG_4_Button->setCursor(Qt::PointingHandCursor);
+    Set_BG_4_Button->setStyleSheet(
+            "QPushButton {"
+            "    background-color: transparent;"
+            "    border: none;"
+            "    color: white;"
+            "    font-size: 16px;"
+            "    text-align: left;"
+            "}"
+            "QPushButton:hover {"
+            "    color: yellow;"
+            "}"
+    );
+
+    const auto Set_BG_5_Button = new QPushButton("Set background 5", this);
+    Set_BG_5_Button->setFont(QFont(fontFamily, 12));
+    Set_BG_5_Button->setGeometry(0, 0, 200, 20);
+    Set_BG_5_Button->move(420, 550);
+    Set_BG_5_Button->setCursor(Qt::PointingHandCursor);
+    Set_BG_5_Button->setStyleSheet(
+            "QPushButton {"
+            "    background-color: transparent;"
+            "    border: none;"
+            "    color: white;"
+            "    font-size: 16px;"
+            "    text-align: left;"
+            "}"
+            "QPushButton:hover {"
+            "    color: yellow;"
+            "}"
+    );
+
     const auto SaveButton = new QPushButton("Save", this);
     SaveButton->setFont(QFont(fontFamily, 12));
-    SaveButton->setGeometry(0, 0, 160, 20);
-    SaveButton->move(200, 520);
+    SaveButton->setGeometry(0, 0, 200, 20);
+    SaveButton->move(420, 580);
     SaveButton->setCursor(Qt::PointingHandCursor);
     SaveButton->setStyleSheet(
             "QPushButton {"

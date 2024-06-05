@@ -231,16 +231,16 @@ signals:
 
 public slots:
     void toggleVolume() {
+        //cout<<volumeOn<<endl;
         volumeOn = !volumeOn;
+        //cout<<volumeOn<<endl;
         float volume = volumeOn ? 1.0f : 0.0f; // Volume 100% ou 0%
         setBackgroundMusicVolume(volume);
     }
 
 private:
-    bool volumeOn;
-
+    bool volumeOn = true;
 };
-
 
 
 
