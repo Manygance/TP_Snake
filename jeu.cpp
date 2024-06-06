@@ -227,7 +227,7 @@ void Jeu::Remove_Fruit(Position pos)
 {
     score += 10;
     terrain[pos.y*largeur+pos.x] = SOL;
-    playSoundEffect("./data/Item_Sound.mp3");
+    playBackgroundMusic("./data/Item_Sound.mp3");
 }
 
 void Jeu::readLevel(){

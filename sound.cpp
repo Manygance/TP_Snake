@@ -70,6 +70,8 @@ void playSoundEffect(const std::string& filePath) {
         std::cerr << "FMOD error: " << FMOD_ErrorString(result) << std::endl;
     }
 
+    std::cout<<"test"<<std::endl;
+
     FMOD_Sound_Release(soundEffect);
 }
 
