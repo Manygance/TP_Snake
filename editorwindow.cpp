@@ -6,7 +6,7 @@
 #include <QPainter>
 #include <QTimer>
 #include <QLabel>
-#include "global_settings.hpp"
+#include "globalsettings.hpp"
 #include <iostream>
 #include "jeu.hpp"
 #include <QCursor>
@@ -18,23 +18,23 @@ using namespace std;
 EditorWindow::EditorWindow()
 {
     // Images récupérées ici : https://rembound.com/articles/creating-a-snake-game-tutorial-with-html5
-    if(bodyVertical.load("./data/body_vertical.png")==false or
-       bodyHorizontal.load("./data/body_horizontal.png")==false or
-       bodyTopLeft.load("./data/body_top_left.png")==false or
-       bodyTopRight.load("./data/body_top_right.png")==false or
-       bodyBottomLeft.load("./data/body_bottom_left.png")==false or
-       bodyBottomRight.load("./data/body_bottom_right.png")==false or
-       headUp.load("./data/head_up.png")==false or
-       headDown.load("./data/head_down.png")==false or
-       headLeft.load("./data/head_left.png")==false or
-       headRight.load("./data/head_right.png")==false or
-       tailUp.load("./data/tail_up.png")==false or
-       tailDown.load("./data/tail_down.png")==false or
-       tailLeft.load("./data/tail_left.png")==false or
-       tailRight.load("./data/tail_right.png")==false or
-       fruit.load("./data/fruit.png")==false or
-       debug.load("./data/debug.png")==false or
-       textBox.load("./data/textbox.png")==false)
+    if(!bodyVertical.load("./data/body_vertical.png") or
+       !bodyHorizontal.load("./data/body_horizontal.png") or
+       !bodyTopLeft.load("./data/body_top_left.png") or
+       !bodyTopRight.load("./data/body_top_right.png") or
+       !bodyBottomLeft.load("./data/body_bottom_left.png") or
+       !bodyBottomRight.load("./data/body_bottom_right.png") or
+       !headUp.load("./data/head_up.png") or
+       !headDown.load("./data/head_down.png") or
+       !headLeft.load("./data/head_left.png") or
+       !headRight.load("./data/head_right.png") or
+       !tailUp.load("./data/tail_up.png") or
+       !tailDown.load("./data/tail_down.png") or
+       !tailLeft.load("./data/tail_left.png") or
+       !tailRight.load("./data/tail_right.png") or
+       !fruit.load("./data/fruit.png") or
+       !debug.load("./data/debug.png") or
+       !textBox.load("./data/textbox.png"))
     {
         cerr<<"Erreur lors du chargement des images"<<endl;
         exit(1);
@@ -296,8 +296,8 @@ void EditorWindow::keyPressEvent(QKeyEvent *event)
 {
     if (event->key()==Qt::Key_Space)
     {
-        jeu.TogglePause();
-        if (jeu.GetPaused())
+        jeu.togglePause();
+        if (jeu.isPaused())
         {
             cout<<"Jeu en pause"<<endl;
 
@@ -318,9 +318,9 @@ void EditorWindow::keyPressEvent(QKeyEvent *event)
     }
     if (event->key()==Qt::Key_Escape)
         QCoreApplication::quit();
-    if (!jeu.GetStarted())
+    if (!jeu.isStarted())
         jeu.setStarted();
-    if (!jeu.GetPaused())
+    if (!jeu.isPaused())
     {
         if (event->key()==Qt::Key_Left and jeu.getDirection()!=DROITE)
             jeu.setDirection(GAUCHE);
@@ -338,8 +338,8 @@ void EditorWindow::keyPressEvent(QKeyEvent *event)
 
 void EditorWindow::startEditor()
 {
-    jeu.readLevel();
-    jeu.initLevel();
+    jeu.loadTerrainTxt();
+    jeu.initTerrain();
     initGrid();
     update();
 }
@@ -366,8 +366,8 @@ void EditorWindow::loadMaze(int mazeIndex) {
     jeu.setLevel(mazeIndex);
     levelBackground = getLevelBackground();
     applyLevelBackground();
-    jeu.readLevel();
-    jeu.initLevel();
+    jeu.loadTerrainTxt();
+    jeu.initTerrain();
     initGrid();
     update();
 }
@@ -375,7 +375,7 @@ void EditorWindow::loadMaze(int mazeIndex) {
 void EditorWindow::saveMap() {
 
     ofstream file;
-    file.open (jeu.getLevelTxT());
+    file.open (terrainTxtPaths[jeu.level]);
 
     file << levelBackground << "\n";
 
@@ -395,7 +395,7 @@ void EditorWindow::saveMap() {
 
 std::string EditorWindow::getLevelBackground() {
 
-    ifstream file(jeu.getLevelTxT());
+    ifstream file(terrainTxtPaths[jeu.level]);
     string firstLine;
     getline(file, firstLine);
     file.close();
@@ -412,3 +412,16 @@ void EditorWindow::applyLevelBackground() {
     QString backgroundImagePath = QString::fromStdString(levelBackground);
     background.load(backgroundImagePath);
 }
+
+void EditorWindow::initGrid() {
+        for (int y = 0; y < jeu.getNbCasesY(); ++y) {
+            for (int x = 0; x < jeu.getNbCasesX(); ++x) {
+                Position pos(x, y);
+                int randomX = QRandomGenerator::global()->bounded(3);
+                int randomY = QRandomGenerator::global()->bounded(3);
+                QRect sourceRect(9 + (12 + randomX) * 25, 163 + randomY * 25, 24, 24);
+                grid[pos] = sourceRect;
+
+            }
+        }
+    }

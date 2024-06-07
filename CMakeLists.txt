@@ -28,8 +28,8 @@ add_executable(Snake ${RESOURCE_ADDED}
         mainmenu.hpp
         gamewindow.hpp
         gamewindow.cpp
-        global_settings.hpp
-        sound.cpp sound.hpp editorwindow.cpp editorwindow.hpp)
+        globalsettings.hpp
+        sound.cpp sound.hpp editorwindow.cpp editorwindow.hpp mainmenu.cpp)
 
 target_link_libraries(Snake
         Qt5::Core
@@ -45,3 +45,4 @@ add_custom_command(
         COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::Gui> $<TARGET_FILE_DIR:Snake>
         COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Qt5::Widgets> $<TARGET_FILE_DIR:Snake>
 )
+

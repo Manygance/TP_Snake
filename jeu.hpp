@@ -2,7 +2,7 @@
 #define JEU_HPP
 
 #include <list>
-#include "global_settings.hpp"
+#include "globalsettings.hpp"
 #include <iostream>
 
 typedef enum {SOL, MUR, FRUIT, DEBUG} Case;
@@ -21,19 +21,18 @@ class Position
 
 class Jeu
 {
-  protected:
+  private:
     Case *terrain;
     int largeur, hauteur; // Nombre de cases en largeur et en hauteur
     std::list<Position> snake;
     Direction dirSnake;
 
-    Position Pos_Fruit;
-    bool pause;
+    Position posFruit;
+    bool paused;
     bool started;
-    char terrain_defaut[LIGNES][COLONNES];
+    char terrainTxtDefault[LIGNES][COLONNES];       // TODO : trouver un moyen de supprimer (variable locale de fonction serait mieux)
     int score;
 
-    
   public:
     Jeu();
     Jeu(const Jeu &);
@@ -43,70 +42,33 @@ class Jeu
     Jeu &operator=(const Jeu &);
 
     bool init();
-    void evolue();
-
-    // Retourne les dimensions (en nombre de cases)
-    int getNbCasesX() const;
-    int getNbCasesY() const;
-
-    // Retourne la case à une position donnée
-    Case getCase(const Position &) const;
-
-    // Retourne la liste des éléments du serpent en lecture seule
-    const std::list<Position> &getSnake() const;
-
-    // Indique si la case à une position donnée existe et est libre
-    bool posValide(const Position &) const;
-
-    // Modifie la direction
-    void setDirection(Direction);
-
-    void Add_Wall(Position);
-    void Remove_Wall(Position);
-    void Add_Fruit_Random();
-    void Remove_Fruit(Position);
-
-    void TogglePause() {
-        pause = !pause;
-    }
-
-    bool GetPaused() const {
-        return pause;
-    }
-
-    bool GetStarted() const {
-        return started;
-    }
-
-    void setStarted() {
-        started = true;
-    }
-
-    void readLevel();
-    void initLevel();
+    void loadTerrainTxt();
+    void initTerrain();
     void initFruit();
 
-    Case getCase(int x, int y){
-        return terrain[y*largeur+x];
-    }
+    void evolue();
 
-    void setCase(int x, int y, Case c){
-        terrain[y*largeur+x] = c;
-    }
+    int getNbCasesX() const;
+    int getNbCasesY() const;
+    Case getCase(const Position &) const;
+    Case getCase(int, int) const;
+    const std::list<Position> &getSnake() const;
+    bool posValide(const Position &) const;
 
-    std::string getLevelTxT();
+    void setDirection(Direction);
+    void addRandomFruit();          // TODO : fusionner les deux fonctions en une "resetFruit"
+    void removeFruit(Position);
 
-    void setLevel(int level) {
-        this->level = level;
-    }
+    
+    void setCase(int, int, Case);
+    void setLevel(int);    
+    Direction getDirection() const;
+    int getScore() const;
 
-    Direction getDirection() const {
-        return dirSnake;
-    }
-
-    int getScore() const {
-        return score;
-    }
+    void togglePause();
+    bool isPaused() const;
+    bool isStarted() const;       // TODO : voir si encore utile ?
+    void setStarted();
 };
 
 #endif

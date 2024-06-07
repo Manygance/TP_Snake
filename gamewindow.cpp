@@ -1,12 +1,8 @@
-//
-// Created by Maný on 5/1/2024.
-//
-
 #include "gamewindow.hpp"
 #include <QPainter>
 #include <QTimer>
 #include <QLabel>
-#include "global_settings.hpp"
+#include "globalsettings.hpp"
 #include <iostream>
 #include "jeu.hpp"
 #include <fstream>
@@ -71,7 +67,7 @@ GameWindow::GameWindow(int level)
 }
 
 void GameWindow::readLevelBackground() {
-    ifstream file(jeu.getLevelTxT());
+    ifstream file(terrainTxtPaths[jeu.level]);
     string firstLine;
     getline(file, firstLine);
     file.close();
@@ -226,7 +222,7 @@ void GameWindow::paintEvent(QPaintEvent *) {
 
     //cout<<jeu.GetStarted()<<"  "<<jeu.getScore()<<endl;
 
-    if (!jeu.GetStarted()) {
+    if (!jeu.isStarted()) {
         notStartedText->show();
         scoreText->hide();
     } else {
@@ -241,8 +237,8 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
 {
     if (event->key()==Qt::Key_Space)
     {
-        jeu.TogglePause();
-        if (jeu.GetPaused())
+        jeu.togglePause();
+        if (jeu.isPaused())
         {
             cout<<"Jeu en pause"<<endl;
 
@@ -263,9 +259,9 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
     }
     if (event->key()==Qt::Key_Escape)
         QCoreApplication::quit();
-    if (!jeu.GetStarted())
+    if (!jeu.isStarted())
         jeu.setStarted();
-    if (!jeu.GetPaused())
+    if (!jeu.isPaused())
     {
         if (event->key()==Qt::Key_Left and jeu.getDirection()!=DROITE)
             jeu.setDirection(GAUCHE);
@@ -294,4 +290,18 @@ void GameWindow::startGame()
     initGrid();
     update();
 }
+
+void GameWindow::initGrid() {
+        for (int y = 0; y < jeu.getNbCasesY(); ++y) {
+            for (int x = 0; x < jeu.getNbCasesX(); ++x) {
+                Position pos(x, y);
+                if (jeu.getCase(pos) != MUR ) {
+                    int randomX = QRandomGenerator::global()->bounded(3);
+                    int randomY = QRandomGenerator::global()->bounded(3);
+                    QRect sourceRect(9 + (12 + randomX) * 25, 163 + randomY * 25, 24, 24);
+                    grid[pos] = sourceRect;
+                }
+            }
+        }
+    }
 

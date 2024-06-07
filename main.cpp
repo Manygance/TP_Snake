@@ -12,8 +12,8 @@ int main(int argc, char *argv[])
 
     srand(time(0));
 
-    SnakeWindow Game;
-    Game.show();
+    SnakeWindow window;
+    window.show();
 
     return app.exec();
 }

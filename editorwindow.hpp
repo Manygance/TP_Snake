@@ -11,6 +11,7 @@
 #include <QImage>
 #include "jeu.hpp"
 
+// TODO : voir si possible de faire une classe mère ?
 class EditorWindow : public QMainWindow {
 Q_OBJECT
 
@@ -37,18 +38,7 @@ public:
 
     QMap<Position, QRect> grid;
 
-    void initGrid() {
-        for (int y = 0; y < jeu.getNbCasesY(); ++y) {
-            for (int x = 0; x < jeu.getNbCasesX(); ++x) {
-                Position pos(x, y);
-                int randomX = QRandomGenerator::global()->bounded(3);
-                int randomY = QRandomGenerator::global()->bounded(3);
-                QRect sourceRect(9 + (12 + randomX) * 25, 163 + randomY * 25, 24, 24);
-                grid[pos] = sourceRect;
-
-            }
-        }
-    }
+    void initGrid();
 
 private slots:
     void loadMaze(int mazeIndex);

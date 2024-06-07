@@ -4,6 +4,7 @@
 #include "editorwindow.hpp"
 #include <QMainWindow>
 #include "sound.hpp"
+#include "mainmenu.hpp"
 
 using namespace std;
 
@@ -29,7 +30,6 @@ SnakeWindow::SnakeWindow(QWidget *pParent, Qt::WindowFlags flags):QMainWindow(pP
 }
 
 void SnakeWindow::handlePlayClicked(int level) {
-    //cout << "Play map clicked" << endl;
     GameWindow *gameWindow = new GameWindow(level);
     stackedWidget->addWidget(gameWindow);
     stackedWidget->setCurrentWidget(gameWindow);
@@ -40,12 +40,10 @@ void SnakeWindow::handlePlayClicked(int level) {
 }
 
 void SnakeWindow::handleExitClicked() {
-    //cout << "Exit clicked" << endl;
     QCoreApplication::quit();
 }
 
 void SnakeWindow::handleCreateMapClicked() {
-    //cout << "Create map clicked" << endl;
     EditorWindow *mapEditor = new EditorWindow();
     stackedWidget->addWidget(mapEditor);
     stackedWidget->setCurrentWidget(mapEditor);

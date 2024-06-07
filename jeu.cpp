@@ -2,7 +2,7 @@
 #include <fstream>
 #include <cassert>
 #include "jeu.hpp"
-#include "global_settings.hpp"
+#include "globalsettings.hpp"
 #include "sound.hpp"
 
 using namespace std;
@@ -35,10 +35,10 @@ Jeu::Jeu()
     terrain = nullptr;
     largeur = 0; hauteur = 0;
     dirSnake = DROITE;
-    pause = false;
+    paused = false;
     started = false;
-    Pos_Fruit.x = rand()%(largeur-1);
-    Pos_Fruit.y = rand()%(hauteur-1);
+    posFruit.x = rand()%(largeur-1);
+    posFruit.y = rand()%(hauteur-1);
     char terrain_defaut[LIGNES][COLONNES]={0};
     level = LEVEL;
     score = 0;
@@ -49,9 +49,9 @@ Jeu::Jeu(const Jeu &jeu):snake(jeu.snake)
     largeur = jeu.largeur;
     hauteur = jeu.hauteur;
     dirSnake = jeu.dirSnake;
-    pause = jeu.pause;
-    Pos_Fruit.x = rand()%(largeur-1);
-    Pos_Fruit.y = rand()%(hauteur-1);
+    paused = jeu.paused;
+    posFruit.x = rand()%(largeur-1);
+    posFruit.y = rand()%(hauteur-1);
     level = LEVEL;
     score = 0;
 
@@ -101,8 +101,8 @@ bool Jeu::init()
     dirSnake = DROITE;
     score = 0;
 
-    readLevel();
-    initLevel();
+    loadTerrainTxt();
+    initTerrain();
     initFruit();
 
     int longueurSerpent = 5;
@@ -122,7 +122,7 @@ bool Jeu::init()
 
 void Jeu::evolue()
 {
-    if (pause || !started) // Si pause ou jeu non démarré, on ne fait rien
+    if (paused || !started) // Si pause ou jeu non démarré, on ne fait rien
     {
         return;
     }
@@ -144,8 +144,8 @@ void Jeu::evolue()
         snake.push_front(posTest);
         if (terrain[posTest.y * largeur + posTest.x] == FRUIT) {
             snake.push_back(snake.back()); // Ajoute une case à la fin du serpent
-            Remove_Fruit(posTest); // Supprime le fruit
-            Add_Fruit_Random();
+            removeFruit(posTest); // Supprime le fruit
+            addRandomFruit();
         }
     }
     else {
@@ -194,7 +194,7 @@ void Jeu::setDirection(Direction dir)
     dirSnake = dir;
 }
 
-void Jeu::Add_Fruit_Random()
+void Jeu::addRandomFruit()
 {
 
     list<Position>::const_iterator itSnake;
@@ -213,26 +213,26 @@ void Jeu::Add_Fruit_Random()
 
     do{
         IsSnake = false;
-        Pos_Fruit.x = rand()%(largeur-1); // Crée un nouveau fruit
-        Pos_Fruit.y = rand()%(hauteur-1);
+        posFruit.x = rand()%(largeur-1); // Crée un nouveau fruit
+        posFruit.y = rand()%(hauteur-1);
         for (int i = 0; i < snake.size(); i++)
-            if (Pos_Fruit == pos[i])
+            if (posFruit == pos[i])
                 IsSnake = true;
-    }while (terrain[Pos_Fruit.y*largeur+Pos_Fruit.x] != SOL || IsSnake == true);
+    }while (terrain[posFruit.y*largeur+posFruit.x] != SOL || IsSnake == true);
 
-    terrain[Pos_Fruit.y*largeur+Pos_Fruit.x] = FRUIT;
+    terrain[posFruit.y*largeur+posFruit.x] = FRUIT;
 }
 
-void Jeu::Remove_Fruit(Position pos)
+void Jeu::removeFruit(Position pos)
 {
     score += 10;
     terrain[pos.y*largeur+pos.x] = SOL;
-    playBackgroundMusic("./data/Item_Sound.mp3");
+    playBackgroundMusic("./data/Item_Sound.mp3");           // TODO : ne pas mettre en playBackgroundMusic (sinon coupure)
 }
 
-void Jeu::readLevel(){
+void Jeu::loadTerrainTxt(){
 
-    ifstream file(getLevelTxT());
+    ifstream file(terrainTxtPaths[level]);
 
     if (!file.is_open()) {
         cerr << "Impossible d'ouvrir le fichier." << endl;
@@ -246,14 +246,14 @@ void Jeu::readLevel(){
     for (int i = 0; i < LIGNES; ++i) {
         getline(file, line);
         for (int j = 0; j < line.size(); ++j) {
-            this->terrain_defaut[i][j] = line[j];
+            this->terrainTxtDefault[i][j] = line[j];
         }
     }
 
     file.close();
 }
 
-void Jeu::initLevel(){
+void Jeu::initTerrain(){
 
     int x, y;
     largeur = COLONNES;
@@ -263,9 +263,9 @@ void Jeu::initLevel(){
 
     for(y=0;y<LIGNES;++y)
         for(x=0;x<COLONNES;++x)
-            if (terrain_defaut[y][x]=='#')
+            if (terrainTxtDefault[y][x]=='#')
                 terrain[y*largeur+x] = MUR;
-            else if (terrain_defaut[y][x]=='.')
+            else if (terrainTxtDefault[y][x]=='.')
                 terrain[y*largeur+x] = SOL;
             else
                 terrain[y*largeur+x] = DEBUG;
@@ -273,42 +273,50 @@ void Jeu::initLevel(){
 
 void Jeu::initFruit(){
 
-    while (terrain[Pos_Fruit.y*largeur+Pos_Fruit.x] != SOL)
+    while (terrain[posFruit.y*largeur+posFruit.x] != SOL)
     {
-        Pos_Fruit.x = rand()%(largeur-1);
-        Pos_Fruit.y = rand()%(hauteur-1);
+        posFruit.x = rand()%(largeur-1);
+        posFruit.y = rand()%(hauteur-1);
     }
 
-    terrain[Pos_Fruit.y*largeur+Pos_Fruit.x] = FRUIT;
+    terrain[posFruit.y*largeur+posFruit.x] = FRUIT;
 
 }
 
-string Jeu::getLevelTxT() {
-
-    string file_path;
-
-    switch (level) {
-        case 0:
-            file_path = "level_1.txt";
-            //cout << "level 1" << endl;
-            break;
-        case 1:
-            file_path = "level_2.txt";
-            //cout << "level 2" << endl;
-            break;
-        case 2:
-            file_path = "level_3.txt";
-            //cout << "level 3" << endl;
-            break;
-        case 3:
-            file_path = "level_4.txt";
-            //cout << "level 4" << endl;
-            break;
-        default:
-            file_path = "level_1.txt";
-            //cout << "default" << endl;
-            break;
-    }
-
-    return file_path;
+void Jeu::togglePause() {
+    paused = !paused;
 }
+
+bool Jeu::isPaused() const {
+    return paused;
+}
+
+bool Jeu::isStarted() const {
+    return started;         
+}
+
+void Jeu::setStarted() {
+    started = true;
+}
+
+Case Jeu::getCase(int x, int y) const {
+    return terrain[y*largeur+x];
+}
+
+void Jeu::setCase(int x, int y, Case c){
+    terrain[y*largeur+x] = c;
+}
+
+void Jeu::setLevel(int level) {
+    this->level = level;
+}
+
+Direction Jeu::getDirection() const {
+    return dirSnake;
+}
+
+int Jeu::getScore() const
+{
+    return score;
+}
+

@@ -10,37 +10,22 @@
 #include "sound.hpp"
 
 class SnakeWindow : public QMainWindow {
-
-    Q_OBJECT
-
-  protected:
-    Jeu jeu;
-    QPixmap BG_Title_1, BG_Title_2;
-
-    QStackedWidget *stackedWidget;
-    MainMenu *mainMenu;
+  Q_OBJECT
 
   public:
     SnakeWindow(QWidget *pParent=nullptr, Qt::WindowFlags flags=Qt::WindowFlags());
 
-  protected:
+  private:
+  // Events
     void paintEvent(QPaintEvent *event);
-
     void handlePlayClicked(int level);
     void handleExitClicked();
     void handleCreateMapClicked();
-};
 
-class CustomPushButton : public QPushButton
-{
-    public:
-    CustomPushButton(QWidget *pParent=nullptr):QPushButton(pParent){}
-
-    void keyPressEvent(QKeyEvent *e)
-    {
-        if (parent()!=nullptr)
-            QCoreApplication::sendEvent(parent(), e);
-    }
+  // Attributs
+    Jeu jeu;
+    QStackedWidget *stackedWidget;
+    MainMenu *mainMenu;
 };
 
 #endif

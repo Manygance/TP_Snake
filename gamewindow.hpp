@@ -31,20 +31,8 @@ public:
     void startGame();
     void handleTimer();
 
-    QMap<Position, QRect> grid; // Associer chaque position de la grille à une source rect
+    QMap<Position, QRect> grid; // Associe chaque position de la grille à une source rect
 
-    void initGrid() {
-        for (int y = 0; y < jeu.getNbCasesY(); ++y) {
-            for (int x = 0; x < jeu.getNbCasesX(); ++x) {
-                Position pos(x, y);
-                if (jeu.getCase(pos) != MUR ) {
-                    int randomX = QRandomGenerator::global()->bounded(3);
-                    int randomY = QRandomGenerator::global()->bounded(3);
-                    QRect sourceRect(9 + (12 + randomX) * 25, 163 + randomY * 25, 24, 24);
-                    grid[pos] = sourceRect;
-                }
-            }
-        }
-    }
+    void initGrid();
 };
 #endif //GAMEWINDOW_HPP
