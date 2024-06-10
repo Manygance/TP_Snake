@@ -1,15 +1,19 @@
-//
-// Created by Maný on 6/4/2024.
-//
-
 #ifndef EDITORWINDOW_HPP
 #define EDITORWINDOW_HPP
 
 
 #include <QtCore/QtCore>
 #include <QtWidgets/QtWidgets>
+#include <QPainter>
+#include <QTimer>
+#include <QLabel>
 #include <QImage>
+#include <QCursor>
+#include <QMouseEvent>
+#include <fstream>
+
 #include "jeu.hpp"
+#include "globalsettings.hpp"
 
 // TODO : voir si possible de faire une classe mère ?
 class EditorWindow : public QMainWindow {
@@ -31,9 +35,6 @@ public:
     void paintEvent(QPaintEvent *);
     void keyPressEvent(QKeyEvent *);
     void startEditor();
-    void setLevel(int level) {
-        this->jeu.level = level;
-    }
     void mousePressEvent(QMouseEvent *event);
 
     QMap<Position, QRect> grid;

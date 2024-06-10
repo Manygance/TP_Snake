@@ -1,9 +1,4 @@
 #include "mainmenu.hpp"
-#include <QRandomGenerator>
-#include <QPixmap>
-#include <iostream>
-#include <QLabel>
-#include <QPushButton>
 
 // TODO : réindenter correctement
     MainMenu::MainMenu(QWidget *parent) : QWidget(parent) {
@@ -201,17 +196,11 @@
 
         connect(volumeButton, &QPushButton::clicked, this, &MainMenu::toggleVolume);
 
-        connect(playEmptyButton, &QPushButton::clicked, this, [this]() { this->playClicked(0); });  // TODO : ????
+        connect(playEmptyButton, &QPushButton::clicked, this, [this]() { this->playClicked(0); });
         connect(playMaze1Button, &QPushButton::clicked, this, [this]() { this->playClicked(1); });
         connect(playMaze2Button, &QPushButton::clicked, this, [this]() { this->playClicked(2); });
         connect(playOwnButton, &QPushButton::clicked, this, [this]() { this->playClicked(3); });
 
         connect(mapEditor, &QPushButton::clicked, this, &MainMenu::createMapClicked);
         connect(exitButton, &QPushButton::clicked, this, &MainMenu::exitClicked);
-    }
-
-    void MainMenu::toggleVolume() {
-        volumeOn = !volumeOn;
-        float volume = volumeOn ? 1.0f : 0.0f; // Volume 100% ou 0%
-        setBackgroundMusicVolume(volume);
     }

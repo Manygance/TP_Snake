@@ -1,9 +1,4 @@
-#include <iostream>
-#include <fstream>
-#include <cassert>
 #include "jeu.hpp"
-#include "globalsettings.hpp"
-#include "sound.hpp"
 
 using namespace std;
 
@@ -30,6 +25,8 @@ bool Position::operator<(const Position &pos) const
     return (x<pos.x || (x==pos.x && y<pos.y));
 }
 
+const std::string Jeu::terrainTxtPaths[] = {"level_1.txt", "level_2.txt", "level_3.txt", "level_4.txt"};        // Initialisation du tableau de niveaux
+
 Jeu::Jeu()
 {
     terrain = nullptr;
@@ -40,7 +37,7 @@ Jeu::Jeu()
     posFruit.x = rand()%(largeur-1);
     posFruit.y = rand()%(hauteur-1);
     char terrain_defaut[LIGNES][COLONNES]={0};
-    level = LEVEL;
+    levelIndex = LEVEL;
     score = 0;
 }
 
@@ -52,7 +49,7 @@ Jeu::Jeu(const Jeu &jeu):snake(jeu.snake)
     paused = jeu.paused;
     posFruit.x = rand()%(largeur-1);
     posFruit.y = rand()%(hauteur-1);
-    level = LEVEL;
+    levelIndex = LEVEL;
     score = 0;
 
     char terrain_defaut[LIGNES][COLONNES]={0};
@@ -153,6 +150,11 @@ void Jeu::evolue()
     }
 }
 
+int Jeu::getLevelIndex() const
+{
+    return levelIndex;
+}
+
 int Jeu::getNbCasesX() const
 {
     return largeur;
@@ -232,7 +234,7 @@ void Jeu::removeFruit(Position pos)
 
 void Jeu::loadTerrainTxt(){
 
-    ifstream file(terrainTxtPaths[level]);
+    ifstream file(Jeu::terrainTxtPaths[levelIndex]);
 
     if (!file.is_open()) {
         cerr << "Impossible d'ouvrir le fichier." << endl;
@@ -308,7 +310,7 @@ void Jeu::setCase(int x, int y, Case c){
 }
 
 void Jeu::setLevel(int level) {
-    this->level = level;
+    this->levelIndex = level;
 }
 
 Direction Jeu::getDirection() const {

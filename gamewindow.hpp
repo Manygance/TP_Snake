@@ -1,14 +1,17 @@
-//
-// Created by Maný on 5/1/2024.
-//
-
 #ifndef GAMEWINDOW_HPP
 #define GAMEWINDOW_HPP
 
 #include <QtCore/QtCore>
 #include <QtWidgets/QtWidgets>
 #include <QImage>
+#include <QPainter>
+#include <QTimer>
+#include <QLabel>
+#include <iostream>
+#include <fstream>
+
 #include "jeu.hpp"
+#include "globalsettings.hpp"
 
 
 class GameWindow : public QMainWindow {
@@ -18,10 +21,13 @@ protected:
     Jeu jeu;
     QPixmap fruit;
     QPixmap bodyVertical, bodyHorizontal, bodyTopLeft, bodyTopRight, bodyBottomLeft, bodyBottomRight, headUp, headDown, headLeft, headRight, tailUp, tailDown, tailLeft, tailRight;
-    QPixmap background;
+    QPixmap background, pokemon;
     QPixmap debug, textBox;
     QLabel *notStartedText;
     QLabel *scoreText;
+    int frame;
+    const int SEQUENCE_LENGTH = 9;
+    const int REPETITIONS = 3;
 
 public:
     GameWindow(int);
@@ -31,7 +37,7 @@ public:
     void startGame();
     void handleTimer();
 
-    QMap<Position, QRect> grid; // Associe chaque position de la grille à une source rect
+    QMap<Position, QRect> grid;
 
     void initGrid();
 };

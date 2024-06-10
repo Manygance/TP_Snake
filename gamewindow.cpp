@@ -1,11 +1,4 @@
 #include "gamewindow.hpp"
-#include <QPainter>
-#include <QTimer>
-#include <QLabel>
-#include "globalsettings.hpp"
-#include <iostream>
-#include "jeu.hpp"
-#include <fstream>
 
 using namespace std;
 
@@ -31,7 +24,8 @@ GameWindow::GameWindow(int level)
        !tailRight.load("./data/tail_right.png") or
        !textBox.load("./data/textbox.png") or
        !debug.load("./data/debug.png") or
-       !fruit.load("./data/fruit.png"))
+       !fruit.load("./data/fruit.png") or
+       !pokemon.load("./data/pokemon.png"))
     {
         cerr<<"Erreur lors du chargement des images"<<endl;
         exit(1);
@@ -54,20 +48,24 @@ GameWindow::GameWindow(int level)
 
     notStartedText = new QLabel("Appuyer sur une touche pour commencer", this);
     notStartedText->setFont(QFont(fontFamily, 12));
-    notStartedText->setGeometry(30, 510, 480, 20);
+    notStartedText->setGeometry(0, 550, 640, 20);
+    notStartedText->setAlignment(Qt::AlignCenter);
     notStartedText->setStyleSheet("color: white; font-size: 16px;");
     notStartedText->show();
 
     scoreText = new QLabel(this);
     scoreText->setFont(QFont(fontFamily, 12));
-    scoreText->setGeometry(30, 540, 480, 20);
+    scoreText->setGeometry(0, 550, 640, 20);
+    scoreText->setAlignment(Qt::AlignCenter);
     scoreText->setStyleSheet("color: white; font-size: 16px;");
     scoreText->hide();
+
+    frame = 0;
 
 }
 
 void GameWindow::readLevelBackground() {
-    ifstream file(terrainTxtPaths[jeu.level]);
+    ifstream file(Jeu::terrainTxtPaths[jeu.getLevelIndex()]);
     string firstLine;
     getline(file, firstLine);
     file.close();
@@ -80,6 +78,9 @@ void GameWindow::paintEvent(QPaintEvent *) {
     QPainter painter(this);
 
     Position pos;
+
+    int cycle_position = frame % SEQUENCE_LENGTH;
+    int frame_value = cycle_position / REPETITIONS;
 
     // Dessine les cases
     for (pos.y = 0; pos.y < jeu.getNbCasesY(); pos.y++)
@@ -139,6 +140,7 @@ void GameWindow::paintEvent(QPaintEvent *) {
             }
         }
 
+    int x_coord, y_coord;
     // Dessine le serpent
     const list<Position> &snake = jeu.getSnake();
     if (!snake.empty()) {
@@ -147,17 +149,31 @@ void GameWindow::paintEvent(QPaintEvent *) {
 
         const Position &posTete = snake.front();
 
-
-
         // Pour la tête
-        if (jeu.getDirection() == 0)
-            painter.drawPixmap(posTete.x * TAILLE_CASE, posTete.y * TAILLE_CASE, headLeft);
-        else if (jeu.getDirection() == 1)
-            painter.drawPixmap(posTete.x * TAILLE_CASE, posTete.y * TAILLE_CASE, headRight);
-        else if (jeu.getDirection() == 2)
-            painter.drawPixmap(posTete.x * TAILLE_CASE, posTete.y * TAILLE_CASE, headUp);
-        else if (jeu.getDirection() == 3)
-            painter.drawPixmap(posTete.x * TAILLE_CASE, posTete.y * TAILLE_CASE, headDown);
+        if (jeu.getDirection() == BAS)
+        {
+            x_coord=1;
+            y_coord=1;
+        }
+        else if (jeu.getDirection() == HAUT)
+        {
+            x_coord=58;
+            y_coord=1;
+        }
+        else if (jeu.getDirection() == GAUCHE)
+        {
+            x_coord=1;
+            y_coord=22;
+        }
+        else if (jeu.getDirection() == DROITE)
+        {
+            x_coord=58;
+            y_coord=22;
+        }
+
+        QRect sourceRect(x_coord + 19 * frame_value, y_coord, 17, 19);
+        QRect destRect(posTete.x * TAILLE_CASE, posTete.y * TAILLE_CASE, 32, 32);
+        painter.drawPixmap(destRect, pokemon, sourceRect);
 
         // Pour la queue
         const Position &posQueue = snake.back();
@@ -168,55 +184,74 @@ void GameWindow::paintEvent(QPaintEvent *) {
 
         if (posQueue.x == posAvantQueue.x)
             if (posQueue.y < posAvantQueue.y)
-                painter.drawPixmap(posQueue.x * TAILLE_CASE, posQueue.y * TAILLE_CASE, tailDown);
+            {
+                x_coord=1;
+                y_coord=1;
+            }
             else if (posQueue.y > posAvantQueue.y)
-                painter.drawPixmap(posQueue.x * TAILLE_CASE, posQueue.y * TAILLE_CASE, tailUp);
+            {
+                x_coord=58;
+                y_coord=1;
+            }
         if (posQueue.y == posAvantQueue.y)
             if (posQueue.x < posAvantQueue.x)
-                painter.drawPixmap(posQueue.x * TAILLE_CASE, posQueue.y * TAILLE_CASE, tailRight);
+            {
+                x_coord=58;
+                y_coord=22;
+            }
             else if (posQueue.x > posAvantQueue.x)
-                painter.drawPixmap(posQueue.x * TAILLE_CASE, posQueue.y * TAILLE_CASE, tailLeft);
+            {
+                x_coord=1;
+                y_coord=22;
+            }
+
+        sourceRect = QRect(x_coord + 19 * frame_value, y_coord, 17, 19);
+        destRect = QRect(posQueue.x * TAILLE_CASE, posQueue.y * TAILLE_CASE, 32, 32);
+        painter.drawPixmap(destRect, pokemon, sourceRect);
 
 
         // Pour le corps
-        if (AFFICHER_CORPS) {
-            for (itSnake = ++snake.begin(); itSnake != --snake.end(); itSnake++) {
-                Position posCorps = *itSnake;
-                Position posNext = *next(itSnake);
-                Position posPrec = *prev(itSnake);
+        for (itSnake = ++snake.begin(); itSnake != --snake.end(); itSnake++) {
+            Position posCorps = *itSnake;
+            Position posNext = *next(itSnake);
+            Position posPrec = *prev(itSnake);
 
-                //cout<<"x : "<<posNext.x<<":"<<posCorps.x<<":"<<posPrec.x<<endl;
-                //cout<<"y : "<<posNext.y<<":"<<posCorps.y<<":"<<posPrec.y<<endl;
+            //cout<<"x : "<<posNext.x<<":"<<posCorps.x<<":"<<posPrec.x<<endl;
+            //cout<<"y : "<<posNext.y<<":"<<posCorps.y<<":"<<posPrec.y<<endl;
 
-                if (posPrec.x < posCorps.x && posNext.x > posCorps.x ||
-                    posNext.x < posCorps.x && posPrec.x > posCorps.x || posPrec.y == posNext.y)
-                    // Horizontal
-                    painter.drawPixmap(posCorps.x * TAILLE_CASE, posCorps.y * TAILLE_CASE, bodyHorizontal);
-                else if (posPrec.x < posCorps.x && posNext.y > posCorps.y ||
-                         posNext.x < posCorps.x && posPrec.y > posCorps.y)
-                    // Angle Left-Down
-                    painter.drawPixmap(posCorps.x * TAILLE_CASE, posCorps.y * TAILLE_CASE, bodyBottomLeft);
-                else if (posPrec.y < posCorps.y && posNext.y > posCorps.y ||
-                         posNext.y < posCorps.y && posPrec.y > posCorps.y || posPrec.x == posNext.x)
-                    // Vertical
-                    painter.drawPixmap(posCorps.x * TAILLE_CASE, posCorps.y * TAILLE_CASE, bodyVertical);
-                else if (posPrec.y < posCorps.y && posNext.x < posCorps.x ||
-                         posNext.y < posCorps.y && posPrec.x < posCorps.x)
-                    // Angle Top-Left
-                    painter.drawPixmap(posCorps.x * TAILLE_CASE, posCorps.y * TAILLE_CASE, bodyTopLeft);
-                else if (posPrec.x > posCorps.x && posNext.y < posCorps.y ||
-                         posNext.x > posCorps.x && posPrec.y < posCorps.y)
-                    // Angle Right-Up
-                    painter.drawPixmap(posCorps.x * TAILLE_CASE, posCorps.y * TAILLE_CASE, bodyTopRight);
-                else if (posPrec.y > posCorps.y && posNext.x > posCorps.x ||
-                         posNext.y > posCorps.y && posPrec.x > posCorps.x)
-                    // Angle Down-Right
-                    painter.drawPixmap(posCorps.x * TAILLE_CASE, posCorps.y * TAILLE_CASE, bodyBottomRight);
-                else
-                    painter.drawPixmap(posCorps.x * TAILLE_CASE, posCorps.y * TAILLE_CASE, debug); // pour le debug
-            }
+            if (posCorps.x == posPrec.x)
+                if (posCorps.y < posPrec.y)
+                {
+                    x_coord=1;
+                    y_coord=1;
+                }
+                else if (posCorps.y > posPrec.y)
+                {
+                    x_coord=58;
+                    y_coord=1;
+                }
+            if (posCorps.y == posPrec.y)
+                if (posCorps.x < posPrec.x)
+                {
+                    x_coord=58;
+                    y_coord=22;
+                }
+                else if (posCorps.x > posPrec.x)
+                {
+                    x_coord=1;
+                    y_coord=22;
+                }
+
+            sourceRect = QRect(x_coord + 19 * frame_value, y_coord, 17, 19);
+            destRect = QRect(posCorps.x * TAILLE_CASE, posCorps.y * TAILLE_CASE, 32, 32);
+            painter.drawPixmap(destRect, pokemon, sourceRect);
+
         }
     }
+
+    cout<<frame<<endl;
+    frame++;
+    cout<<frame<<endl;
 
     painter.drawPixmap(0, 480, textBox);
 
@@ -229,8 +264,8 @@ void GameWindow::paintEvent(QPaintEvent *) {
         notStartedText->hide();
         scoreText->setText("Score : " + QString::number(jeu.getScore()));
         scoreText->show();
-
     }
+
 }
 
 void GameWindow::keyPressEvent(QKeyEvent *event)
@@ -274,7 +309,6 @@ void GameWindow::keyPressEvent(QKeyEvent *event)
     }
     else
         return;
-    update();
 }
 
 void GameWindow::handleTimer()
@@ -288,7 +322,7 @@ void GameWindow::startGame()
 {
     jeu.init();
     initGrid();
-    update();
+    //update();
 }
 
 void GameWindow::initGrid() {

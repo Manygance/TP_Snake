@@ -1,10 +1,4 @@
-#include <iostream>
 #include "snakewindow.hpp"
-#include "gamewindow.hpp"
-#include "editorwindow.hpp"
-#include <QMainWindow>
-#include "sound.hpp"
-#include "mainmenu.hpp"
 
 using namespace std;
 

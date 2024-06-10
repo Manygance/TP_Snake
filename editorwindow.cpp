@@ -1,17 +1,4 @@
-//
-// Created by Maný on 6/4/2024.
-//
-
 #include "editorwindow.hpp"
-#include <QPainter>
-#include <QTimer>
-#include <QLabel>
-#include "globalsettings.hpp"
-#include <iostream>
-#include "jeu.hpp"
-#include <QCursor>
-#include <QMouseEvent>
-#include <fstream>
 
 using namespace std;
 
@@ -375,7 +362,7 @@ void EditorWindow::loadMaze(int mazeIndex) {
 void EditorWindow::saveMap() {
 
     ofstream file;
-    file.open (terrainTxtPaths[jeu.level]);
+    file.open (Jeu::terrainTxtPaths[jeu.getLevelIndex()]);
 
     file << levelBackground << "\n";
 
@@ -395,7 +382,7 @@ void EditorWindow::saveMap() {
 
 std::string EditorWindow::getLevelBackground() {
 
-    ifstream file(terrainTxtPaths[jeu.level]);
+    ifstream file(Jeu::terrainTxtPaths[jeu.getLevelIndex()]);
     string firstLine;
     getline(file, firstLine);
     file.close();

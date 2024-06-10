@@ -6,6 +6,8 @@
 #include <QLabel>
 #include <QFontDatabase>
 #include <QSlider>
+#include <QRandomGenerator>
+#include <QPixmap>
 #include <iostream>
 #include "sound.hpp"
 
@@ -17,11 +19,18 @@ Q_OBJECT
 public:
     MainMenu(QWidget *parent = nullptr);
 
-public slots:
-    void playClicked(int);          // TODO : si ça marche pas, repasser en signals:
+signals:
+    void playClicked(int);
     void exitClicked();
     void createMapClicked();
-    void toggleVolume();
+    
+public slots:
+    void toggleVolume() {
+        volumeOn = !volumeOn;
+        float volume = volumeOn ? 1.0f : 0.0f; // Volume 100% ou 0%
+        setBackgroundMusicVolume(volume);
+    }
+
 
 private:
     bool volumeOn = true;
