@@ -26,6 +26,7 @@ bool Position::operator<(const Position &pos) const
 }
 
 const std::string Jeu::terrainTxtPaths[] = {"level_1.txt", "level_2.txt", "level_3.txt", "level_4.txt"};        // Initialisation du tableau de niveaux
+const int Jeu::initialFruitNextLevelCondition[] = {0, 2, 2, 2};
 
 Jeu::Jeu()
 {
@@ -37,7 +38,7 @@ Jeu::Jeu()
     posFruit.x = rand()%(largeur-1);
     posFruit.y = rand()%(hauteur-1);
     char terrain_defaut[LIGNES][COLONNES]={0};
-    levelIndex = LEVEL;
+    levelIndex = 0;
     score = 0;
 }
 
@@ -49,7 +50,7 @@ Jeu::Jeu(const Jeu &jeu):snake(jeu.snake)
     paused = jeu.paused;
     posFruit.x = rand()%(largeur-1);
     posFruit.y = rand()%(hauteur-1);
-    levelIndex = LEVEL;
+    levelIndex = 0;
     score = 0;
 
     char terrain_defaut[LIGNES][COLONNES]={0};
@@ -97,6 +98,9 @@ bool Jeu::init()
     started = false;
     dirSnake = DROITE;
     score = 0;
+    stairsAdded = false;
+
+    NextLevelCondition = initialFruitNextLevelCondition[levelIndex];
 
     loadTerrainTxt();
     initTerrain();
@@ -136,7 +140,11 @@ void Jeu::evolue()
 
     //cout << "posTest.x: " << posTest.x << " posTest.y: " << posTest.y << endl;
 
-    if (posValide(posTest)) {
+    if(terrain[posTest.y * largeur + posTest.x] == ESCALIER)
+    {
+        takeStairs();
+    }
+    else if (posValide(posTest)) {
         snake.pop_back();
         snake.push_front(posTest);
         if (terrain[posTest.y * largeur + posTest.x] == FRUIT) {
@@ -228,8 +236,10 @@ void Jeu::addRandomFruit()
 void Jeu::removeFruit(Position pos)
 {
     score += 10;
+    if (NextLevelCondition != 0)
+        NextLevelCondition--;
     terrain[pos.y*largeur+pos.x] = SOL;
-    playBackgroundMusic("./data/Item_Sound.mp3");           // TODO : ne pas mettre en playBackgroundMusic (sinon coupure)
+    playSoundEffect("./data/Item_Sound.mp3");
 }
 
 void Jeu::loadTerrainTxt(){
@@ -285,6 +295,18 @@ void Jeu::initFruit(){
 
 }
 
+void Jeu::addStair() {
+
+    while (terrain[posStair.y*largeur+posStair.x] != SOL and (terrain[posStair.y*largeur+posStair.x] != FRUIT))
+    {
+        posStair.x = rand()%(largeur-1);
+        posStair.y = rand()%(hauteur-1);
+    }
+
+    terrain[posStair.y*largeur+posStair.x] = ESCALIER;
+    stairsAdded = true;
+}
+
 void Jeu::togglePause() {
     paused = !paused;
 }
@@ -322,3 +344,22 @@ int Jeu::getScore() const
     return score;
 }
 
+int Jeu::getInitialNextLevelCondition() const
+{
+    return initialFruitNextLevelCondition[levelIndex];
+}
+
+int Jeu::getNextLevelCondition() const
+{
+    return NextLevelCondition;
+}
+
+bool Jeu::getStairsAdded() const {
+    return stairsAdded;
+}
+
+void Jeu::takeStairs() {
+    stairsAdded = false;
+    levelIndex++;
+    init();
+}

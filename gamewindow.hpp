@@ -21,10 +21,11 @@ protected:
     Jeu jeu;
     QPixmap fruit;
     QPixmap bodyVertical, bodyHorizontal, bodyTopLeft, bodyTopRight, bodyBottomLeft, bodyBottomRight, headUp, headDown, headLeft, headRight, tailUp, tailDown, tailLeft, tailRight;
-    QPixmap background, pokemon;
+    QPixmap background, pokemon, stairs;
     QPixmap debug, textBox;
     QLabel *notStartedText;
     QLabel *scoreText;
+    QLabel *NextLevelText;
     int frame;
     const int SEQUENCE_LENGTH = 9;
     const int REPETITIONS = 3;

@@ -16,6 +16,7 @@ typedef enum
   SOL,
   MUR,
   FRUIT,
+  ESCALIER,
   DEBUG
 } Case;
 typedef enum
@@ -43,15 +44,18 @@ private:
   char terrainTxtDefault[LIGNES][COLONNES]; // TODO : trouver un moyen de supprimer (variable locale de fonction serait mieux)
   Case *terrain;
   int levelIndex;
+  int NextLevelCondition;
   int largeur, hauteur; // Nombre de cases en largeur et en hauteur
   std::list<Position> snake;
   Direction dirSnake;
 
   Position posFruit;
+  Position posStair;
   int score;
 
   bool paused;
   bool started;
+  bool stairsAdded;
 
 public:
   Jeu();
@@ -61,21 +65,28 @@ public:
   Jeu &operator=(const Jeu &);
 
   static const std::string terrainTxtPaths[];
+  static const int initialFruitNextLevelCondition[];
 
   bool init();
   void loadTerrainTxt();
   void initTerrain();
   void initFruit();
+  void addStair();
+
+  void takeStairs();
 
   void evolue();
 
   int getLevelIndex() const;
   int getNbCasesX() const;
   int getNbCasesY() const;
+  int getInitialNextLevelCondition() const;
+  int getNextLevelCondition() const;
   Case getCase(const Position &) const;
   Case getCase(int, int) const;
   const std::list<Position> &getSnake() const;
   bool posValide(const Position &) const;
+  bool getStairsAdded() const;
 
   void setDirection(Direction);
   void addRandomFruit(); // TODO : fusionner les deux fonctions en une "resetFruit"

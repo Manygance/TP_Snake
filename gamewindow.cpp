@@ -25,7 +25,8 @@ GameWindow::GameWindow(int level)
        !textBox.load("./data/textbox.png") or
        !debug.load("./data/debug.png") or
        !fruit.load("./data/fruit.png") or
-       !pokemon.load("./data/pokemon.png"))
+       !pokemon.load("./data/pokemon.png") or
+       !stairs.load("./data/stairs.png"))
     {
         cerr<<"Erreur lors du chargement des images"<<endl;
         exit(1);
@@ -60,6 +61,13 @@ GameWindow::GameWindow(int level)
     scoreText->setStyleSheet("color: white; font-size: 16px;");
     scoreText->hide();
 
+    NextLevelText = new QLabel(this);
+    NextLevelText->setFont(QFont(fontFamily, 12));
+    NextLevelText->setGeometry(0, 570, 640, 20);
+    NextLevelText->setAlignment(Qt::AlignCenter);
+    NextLevelText->setStyleSheet("color: white; font-size: 16px;");
+    NextLevelText->hide();
+
     frame = 0;
 
 }
@@ -82,6 +90,12 @@ void GameWindow::paintEvent(QPaintEvent *) {
     int cycle_position = frame % SEQUENCE_LENGTH;
     int frame_value = cycle_position / REPETITIONS;
 
+    if (!jeu.getStairsAdded() && jeu.getLevelIndex() != 0 && jeu.getNextLevelCondition() == 0)
+        jeu.addStair();
+
+    //cout << jeu.getStairsAdded() << " : " <<  jeu.getLevelIndex() << " : " <<  jeu.getNextLevelCondition() << " : "
+    //<< (!jeu.getStairsAdded() && jeu.getLevelIndex() != 0 && jeu.getNextLevelCondition() == 0) << endl;
+
     // Dessine les cases
     for (pos.y = 0; pos.y < jeu.getNbCasesY(); pos.y++)
         for (pos.x = 0; pos.x < jeu.getNbCasesX(); pos.x++)
@@ -99,6 +113,10 @@ void GameWindow::paintEvent(QPaintEvent *) {
                 QRect sourceRect = grid[pos];
                 QRect destRect(pos.x * TAILLE_CASE, pos.y * TAILLE_CASE, 32, 32);
                 painter.drawPixmap(destRect, background, sourceRect);
+            } else if (jeu.getCase(pos) == ESCALIER) {
+                QRect sourceRect(0, 0, 24, 24);
+                QRect destRect(pos.x * TAILLE_CASE, pos.y * TAILLE_CASE, 32, 32);
+                painter.drawPixmap(destRect, stairs, sourceRect);
             } else
                 painter.drawPixmap(pos.x * TAILLE_CASE, pos.y * TAILLE_CASE, debug);
 
@@ -218,26 +236,22 @@ void GameWindow::paintEvent(QPaintEvent *) {
             if (posCorps.x == posPrec.x)
                 if ( (posCorps.y < posPrec.y) && posCorps.y != 0 || (posCorps.y == 14 and posPrec.y == 0) )
                 {
-                    cout << "bas : " <<posCorps.y << ":" << posPrec.y << endl;
                     x_coord=1;
                     y_coord=1;
                 }
                 else if ( (posCorps.y > posPrec.y) && posCorps.y != 14 || (posCorps.y == 0 and posPrec.y == 14) )
                 {
-                    cout << "haut : " <<posCorps.y << ":" << posPrec.y << endl;
                     x_coord=58;
                     y_coord=1;
                 }
             if (posCorps.y == posPrec.y)
                 if ( ( posCorps.x < posPrec.x ) && posCorps.x != 0 || (posCorps.x == 19 and posPrec.x == 0) )
                 {
-                    cout << "droite : " <<posCorps.x << ":" << posPrec.x << endl;
                     x_coord=58;
                     y_coord=22;
                 }
                 else if ( (posCorps.x > posPrec.x) && posCorps.x != 19 || (posCorps.x == 0 and posPrec.x == 19) )
                 {
-                    cout << "gauche : " <<posCorps.x << ":" << posPrec.x << endl;
                     x_coord=1;
                     y_coord=22;
                 }
@@ -249,21 +263,32 @@ void GameWindow::paintEvent(QPaintEvent *) {
         }
     }
 
-    cout<<frame<<endl;
     frame++;
-    cout<<frame<<endl;
 
     painter.drawPixmap(0, 480, textBox);
 
-    //cout<<jeu.GetStarted()<<"  "<<jeu.getScore()<<endl;
 
     if (!jeu.isStarted()) {
         notStartedText->show();
         scoreText->hide();
+        NextLevelText->hide();
     } else {
         notStartedText->hide();
         scoreText->setText("Score : " + QString::number(jeu.getScore()));
         scoreText->show();
+        if ( jeu.getLevelIndex() != 0)
+        {
+            scoreText->setGeometry(0, 530, 640, 20);
+            if (jeu.getNextLevelCondition() == 0)
+                NextLevelText->setText("Prenez les escaliers pour passer au niveau suivant");
+            else
+                if (jeu.getNextLevelCondition() == 1)
+                    NextLevelText->setText("Il reste " + QString::number(jeu.getNextLevelCondition()) + " fruit avant le prochain niveau.");
+                else
+                    NextLevelText->setText("Il reste " + QString::number(jeu.getNextLevelCondition()) + " fruits avant le prochain niveau.");
+            NextLevelText->show();
+        }
+
     }
 
 }
