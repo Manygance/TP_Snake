@@ -183,23 +183,23 @@ void GameWindow::paintEvent(QPaintEvent *) {
         //cout<<"y : "<<posQueue.y<<":"<<posAvantQueue.y<<endl;
 
         if (posQueue.x == posAvantQueue.x)
-            if (posQueue.y < posAvantQueue.y)
+            if ( (posQueue.y < posAvantQueue.y) && posQueue.y != 0 || (posQueue.y == 14 and posAvantQueue.y == 0) )
             {
                 x_coord=1;
                 y_coord=1;
             }
-            else if (posQueue.y > posAvantQueue.y)
+            else if ( (posQueue.y > posAvantQueue.y) && posQueue.y != 14 || (posQueue.y == 0 and posAvantQueue.y == 14) )
             {
                 x_coord=58;
                 y_coord=1;
             }
         if (posQueue.y == posAvantQueue.y)
-            if (posQueue.x < posAvantQueue.x)
+            if ( ( posQueue.x < posAvantQueue.x ) && posQueue.x != 0 || (posQueue.x == 19 and posAvantQueue.x == 0) )
             {
                 x_coord=58;
                 y_coord=22;
             }
-            else if (posQueue.x > posAvantQueue.x)
+            else if ( (posQueue.x > posAvantQueue.x) && posQueue.x != 19 || (posQueue.x == 0 and posAvantQueue.x == 19) )
             {
                 x_coord=1;
                 y_coord=22;
@@ -213,31 +213,31 @@ void GameWindow::paintEvent(QPaintEvent *) {
         // Pour le corps
         for (itSnake = ++snake.begin(); itSnake != --snake.end(); itSnake++) {
             Position posCorps = *itSnake;
-            Position posNext = *next(itSnake);
             Position posPrec = *prev(itSnake);
 
-            //cout<<"x : "<<posNext.x<<":"<<posCorps.x<<":"<<posPrec.x<<endl;
-            //cout<<"y : "<<posNext.y<<":"<<posCorps.y<<":"<<posPrec.y<<endl;
-
             if (posCorps.x == posPrec.x)
-                if (posCorps.y < posPrec.y)
+                if ( (posCorps.y < posPrec.y) && posCorps.y != 0 || (posCorps.y == 14 and posPrec.y == 0) )
                 {
+                    cout << "bas : " <<posCorps.y << ":" << posPrec.y << endl;
                     x_coord=1;
                     y_coord=1;
                 }
-                else if (posCorps.y > posPrec.y)
+                else if ( (posCorps.y > posPrec.y) && posCorps.y != 14 || (posCorps.y == 0 and posPrec.y == 14) )
                 {
+                    cout << "haut : " <<posCorps.y << ":" << posPrec.y << endl;
                     x_coord=58;
                     y_coord=1;
                 }
             if (posCorps.y == posPrec.y)
-                if (posCorps.x < posPrec.x)
+                if ( ( posCorps.x < posPrec.x ) && posCorps.x != 0 || (posCorps.x == 19 and posPrec.x == 0) )
                 {
+                    cout << "droite : " <<posCorps.x << ":" << posPrec.x << endl;
                     x_coord=58;
                     y_coord=22;
                 }
-                else if (posCorps.x > posPrec.x)
+                else if ( (posCorps.x > posPrec.x) && posCorps.x != 19 || (posCorps.x == 0 and posPrec.x == 19) )
                 {
+                    cout << "gauche : " <<posCorps.x << ":" << posPrec.x << endl;
                     x_coord=1;
                     y_coord=22;
                 }
@@ -322,7 +322,6 @@ void GameWindow::startGame()
 {
     jeu.init();
     initGrid();
-    //update();
 }
 
 void GameWindow::initGrid() {
