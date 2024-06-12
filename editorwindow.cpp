@@ -39,7 +39,7 @@ EditorWindow::EditorWindow()
 
     QString fontFamily = QFontDatabase::applicationFontFamilies(fontId).at(0);
 
-    const auto Maze_1_Button = new QPushButton("Maze 1", this);
+    const auto Maze_1_Button = new QPushButton("Carte 1", this);
     Maze_1_Button->setFont(QFont(fontFamily, 12));
     Maze_1_Button->setGeometry(0, 0, 160, 20);
     Maze_1_Button->move(40, 520);
@@ -57,7 +57,7 @@ EditorWindow::EditorWindow()
             "}"
     );
 
-    const auto Maze_2_Button = new QPushButton("Maze 2", this);
+    const auto Maze_2_Button = new QPushButton("Carte 2", this);
     Maze_2_Button->setFont(QFont(fontFamily, 12));
     Maze_2_Button->setGeometry(0, 0, 200, 20);
     Maze_2_Button->move(40, 550);
@@ -75,12 +75,12 @@ EditorWindow::EditorWindow()
             "}"
     );
 
-    const auto Personnalized_Button = new QPushButton("Personalized", this);
-    Personnalized_Button->setFont(QFont(fontFamily, 12));
-    Personnalized_Button->setGeometry(0, 0, 200, 20);
-    Personnalized_Button->move(40, 580);
-    Personnalized_Button->setCursor(Qt::PointingHandCursor);
-    Personnalized_Button->setStyleSheet(
+    const auto Maze_3_Button = new QPushButton("Carte 3", this);
+    Maze_3_Button->setFont(QFont(fontFamily, 12));
+    Maze_3_Button->setGeometry(0, 0, 200, 20);
+    Maze_3_Button->move(40, 580);
+    Maze_3_Button->setCursor(Qt::PointingHandCursor);
+    Maze_3_Button->setStyleSheet(
             "QPushButton {"
             "    background-color: transparent;"
             "    border: none;"
@@ -93,7 +93,7 @@ EditorWindow::EditorWindow()
             "}"
     );
 
-    const auto Set_BG_1_Button = new QPushButton("Set background 1", this);
+    const auto Set_BG_1_Button = new QPushButton("Appliquer fond 1", this);
     Set_BG_1_Button->setFont(QFont(fontFamily, 12));
     Set_BG_1_Button->setGeometry(0, 0, 200, 20);
     Set_BG_1_Button->move(210, 520);
@@ -111,7 +111,7 @@ EditorWindow::EditorWindow()
             "}"
     );
 
-    const auto Set_BG_2_Button = new QPushButton("Set background 2", this);
+    const auto Set_BG_2_Button = new QPushButton("Appliquer fond 2", this);
     Set_BG_2_Button->setFont(QFont(fontFamily, 12));
     Set_BG_2_Button->setGeometry(0, 0, 200, 20);
     Set_BG_2_Button->move(210, 550);
@@ -129,7 +129,7 @@ EditorWindow::EditorWindow()
             "}"
     );
 
-    const auto Set_BG_3_Button = new QPushButton("Set background 3", this);
+    const auto Set_BG_3_Button = new QPushButton("Appliquer fond 3", this);
     Set_BG_3_Button->setFont(QFont(fontFamily, 12));
     Set_BG_3_Button->setGeometry(0, 0, 200, 20);
     Set_BG_3_Button->move(210, 580);
@@ -147,7 +147,7 @@ EditorWindow::EditorWindow()
             "}"
     );
 
-    const auto Set_BG_4_Button = new QPushButton("Set background 4", this);
+    const auto Set_BG_4_Button = new QPushButton("Appliquer fond 4", this);
     Set_BG_4_Button->setFont(QFont(fontFamily, 12));
     Set_BG_4_Button->setGeometry(0, 0, 200, 20);
     Set_BG_4_Button->move(420, 520);
@@ -165,7 +165,7 @@ EditorWindow::EditorWindow()
             "}"
     );
 
-    const auto Set_BG_5_Button = new QPushButton("Set background 5", this);
+    const auto Set_BG_5_Button = new QPushButton("Appliquer fond 5", this);
     Set_BG_5_Button->setFont(QFont(fontFamily, 12));
     Set_BG_5_Button->setGeometry(0, 0, 200, 20);
     Set_BG_5_Button->move(420, 550);
@@ -183,7 +183,7 @@ EditorWindow::EditorWindow()
             "}"
     );
 
-    const auto SaveButton = new QPushButton("Save", this);
+    const auto SaveButton = new QPushButton("Sauvegarder", this);
     SaveButton->setFont(QFont(fontFamily, 12));
     SaveButton->setGeometry(0, 0, 200, 20);
     SaveButton->move(420, 580);
@@ -203,7 +203,7 @@ EditorWindow::EditorWindow()
 
     connect(Maze_1_Button, &QPushButton::clicked, this, [this]() { this->loadMaze(1); });
     connect(Maze_2_Button, &QPushButton::clicked, this, [this]() { this->loadMaze(2); });
-    connect(Personnalized_Button, &QPushButton::clicked, this, [this]() { this->loadMaze(3); });
+    connect(Maze_3_Button, &QPushButton::clicked, this, [this]() { this->loadMaze(3); });
     connect(Set_BG_1_Button, &QPushButton::clicked, this, [this]() {setLevelBackground("./data/BG_1.png");});
     connect(Set_BG_2_Button, &QPushButton::clicked, this, [this]() {setLevelBackground("./data/BG_2.png");});
     connect(Set_BG_3_Button, &QPushButton::clicked, this, [this]() {setLevelBackground("./data/BG_3.png");});

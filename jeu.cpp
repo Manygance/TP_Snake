@@ -38,7 +38,7 @@ Jeu::Jeu()
     posFruit.x = rand()%(largeur-1);
     posFruit.y = rand()%(hauteur-1);
     char terrain_defaut[LIGNES][COLONNES]={0};
-    levelIndex = 0;
+    levelIndex = 1; // initialise le niveau à 1 pour que le niveau affiché dans l'editeur de map soit la carte 1 par défaut
     score = 0;
 }
 
@@ -50,10 +50,9 @@ Jeu::Jeu(const Jeu &jeu):snake(jeu.snake)
     paused = jeu.paused;
     posFruit.x = rand()%(largeur-1);
     posFruit.y = rand()%(hauteur-1);
-    levelIndex = 0;
+    levelIndex = 1; // initialise le niveau à 1 pour que le niveau affiché dans l'editeur de map soit la carte 1 par défaut
     score = 0;
 
-    char terrain_defaut[LIGNES][COLONNES]={0};
     
     if (jeu.terrain!=nullptr)
     {
@@ -212,7 +211,7 @@ void Jeu::addRandomFruit()
 
     Position pos[snake.size()];
     int idex = 0;
-    bool IsSnake = false;
+    bool IsSnake;
 
     while (itSnake!=snake.end())
     {
@@ -359,7 +358,9 @@ bool Jeu::getStairsAdded() const {
 }
 
 void Jeu::takeStairs() {
+
     stairsAdded = false;
     levelIndex++;
     init();
+
 }

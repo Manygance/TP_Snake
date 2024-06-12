@@ -66,7 +66,7 @@
 
 
         // Boutons
-        const auto playEmptyButton = new QPushButton("Empty map", this);
+        const auto playEmptyButton = new QPushButton("Carte vide", this);
         playEmptyButton->setFont(QFont(fontFamily, 12));
         playEmptyButton->setGeometry(0, 0, 160, 20);
         playEmptyButton->move(40, 40);
@@ -84,7 +84,7 @@
                 "}"
         );
 
-        const auto playMaze1Button = new QPushButton("Maze map 1", this);
+        const auto playMaze1Button = new QPushButton("Carte 1", this);
         playMaze1Button->setFont(QFont(fontFamily, 12));
         playMaze1Button->setGeometry(0, 0, 160, 20);
         playMaze1Button->move(40, 70);
@@ -102,7 +102,7 @@
                 "}"
         );
 
-        const auto playMaze2Button = new QPushButton("Maze map 2", this);
+        const auto playMaze2Button = new QPushButton("Carte 2", this);
         playMaze2Button->setFont(QFont(fontFamily, 12));
         playMaze2Button->setGeometry(0, 0, 160, 20);
         playMaze2Button->move(40, 100);
@@ -120,12 +120,12 @@
                 "}"
         );
 
-        const auto playOwnButton = new QPushButton("Personalized map", this);
-        playOwnButton->setFont(QFont(fontFamily, 12));
-        playOwnButton->setGeometry(0, 0, 160, 20);
-        playOwnButton->move(40, 130);
-        playOwnButton->setCursor(Qt::PointingHandCursor);
-        playOwnButton->setStyleSheet(
+        const auto playMaze3Button = new QPushButton("Carte 3", this);
+        playMaze3Button->setFont(QFont(fontFamily, 12));
+        playMaze3Button->setGeometry(0, 0, 160, 20);
+        playMaze3Button->move(40, 130);
+        playMaze3Button->setCursor(Qt::PointingHandCursor);
+        playMaze3Button->setStyleSheet(
                 "QPushButton {"
                 "    background-color: transparent;"
                 "    border: none;"
@@ -138,7 +138,7 @@
                 "}"
         );
 
-        const auto mapEditor = new QPushButton("Modify maps", this);
+        const auto mapEditor = new QPushButton("Modifier cartes", this);
         mapEditor->setFont(QFont(fontFamily, 12));
         mapEditor->setGeometry(0, 0, 160, 20);
         mapEditor->move(40, 160);
@@ -156,7 +156,7 @@
                 "}"
         );
 
-        const auto volumeButton = new QPushButton("Toggle Volume", this);
+        const auto volumeButton = new QPushButton("Son", this);
         volumeButton->setFont(QFont(fontFamily, 12));
         volumeButton->setGeometry(0, 0, 160, 20);
         volumeButton->move(40, 190);
@@ -174,7 +174,7 @@
                 "}"
         );
 
-        const auto exitButton = new QPushButton("Exit", this);
+        const auto exitButton = new QPushButton("Quitter", this);
         exitButton->setFont(QFont(fontFamily, 12));
         exitButton->setGeometry(0, 0, 160, 20);
         exitButton->move(40, 220);
@@ -192,14 +192,12 @@
                 "}"
         );
 
-
-
         connect(volumeButton, &QPushButton::clicked, this, &MainMenu::toggleVolume);
 
         connect(playEmptyButton, &QPushButton::clicked, this, [this]() { this->playClicked(0); });
         connect(playMaze1Button, &QPushButton::clicked, this, [this]() { this->playClicked(1); });
         connect(playMaze2Button, &QPushButton::clicked, this, [this]() { this->playClicked(2); });
-        connect(playOwnButton, &QPushButton::clicked, this, [this]() { this->playClicked(3); });
+        connect(playMaze3Button, &QPushButton::clicked, this, [this]() { this->playClicked(3); });
 
         connect(mapEditor, &QPushButton::clicked, this, &MainMenu::createMapClicked);
         connect(exitButton, &QPushButton::clicked, this, &MainMenu::exitClicked);
