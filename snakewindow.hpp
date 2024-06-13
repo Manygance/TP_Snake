@@ -8,30 +8,36 @@
 
 #include <iostream>
 
-#include "jeu.hpp"
+#include "game.hpp"
 #include "sound.hpp"
-#include "gamewindow.hpp"
+#include "playwindow.hpp"
 #include "editorwindow.hpp"
 #include "sound.hpp"
 #include "mainmenu.hpp"
 
-class SnakeWindow : public QMainWindow {
-  Q_OBJECT
+/// @brief Fenêtre principale du jeu, créée au lancement du programme.
+class SnakeWindow : public QMainWindow
+{
+    Q_OBJECT
 
-  public:
-    SnakeWindow(QWidget *pParent=nullptr, Qt::WindowFlags flags=Qt::WindowFlags());
+public:
+    /// @brief Constructeur de la fenêtre principale
+    /// @param pParent Widget parent de la fenêtre
+    /// @param flags Flags pour la création de la fenêtre
+    SnakeWindow(QWidget *pParent = nullptr, Qt::WindowFlags flags = Qt::WindowFlags());
+    ~SnakeWindow();
 
-  private:
-  // Events
+private:
+    // Events
     void paintEvent(QPaintEvent *event);
-    void handlePlayClicked(int level);
+    void handlePlayClicked(int levelIndex);
     void handleExitClicked();
     void handleCreateMapClicked();
 
-  // Attributs
-    Jeu jeu;
-    QStackedWidget *stackedWidget;
-    MainMenu *mainMenu;
+    // Attributs
+    Game* m_game;
+    QStackedWidget *m_stackedWidget;
+    MainMenu *m_mainMenu;
 };
 
 #endif

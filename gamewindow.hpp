@@ -7,39 +7,40 @@
 #include <QPainter>
 #include <QTimer>
 #include <QLabel>
+
 #include <iostream>
 #include <fstream>
 
-#include "jeu.hpp"
+#include "game.hpp"
 #include "globalsettings.hpp"
 
 
+/// @brief Classe de base pour la gestion des fenêtres de jeu
 class GameWindow : public QMainWindow {
 Q_OBJECT
 
-protected:
-    Jeu jeu;
-    QPixmap fruit;
-    QPixmap bodyVertical, bodyHorizontal, bodyTopLeft, bodyTopRight, bodyBottomLeft, bodyBottomRight, headUp, headDown, headLeft, headRight, tailUp, tailDown, tailLeft, tailRight;
-    QPixmap background, pokemon, stairs;
-    QPixmap debug, textBox;
-    QLabel *notStartedText;
-    QLabel *scoreText;
-    QLabel *NextLevelText;
-    int frame;
-    const int SEQUENCE_LENGTH = 9;
-    const int REPETITIONS = 3;
-
 public:
-    GameWindow(int);
-    void readLevelBackground();
-    void paintEvent(QPaintEvent *);
-    void keyPressEvent(QKeyEvent *);
-    void startGame();
+    GameWindow(Game*);
     void handleTimer();
+    void paintEvent(QPaintEvent*);
 
-    QMap<Position, QRect> grid;
+    void reinit();
 
-    void initGrid();
+    virtual void onPaintEvent(QPainter*) = 0;
+
+protected:
+
+    Game* m_game;
+    QPixmap m_fruitPixmap, m_terrainPixmap, m_pokemonPixmap, m_stairsPixmap, m_debugPixmap, m_textBoxPixmap;
+
+    QString m_fontFamily;           // Police d'écriture pour les textes de la fenêtre
+
+    /// @brief Grille permettant de positionner les images des cases du sol
+    QMap<Position, QRect> m_groundGrid;
+
+    int m_currentFrame;
+    static const int frameSequenceLength = 9;
+    static const int frameRepetitions = 3;
 };
-#endif //GAMEWINDOW_HPP
+
+#endif

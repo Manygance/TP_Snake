@@ -2,49 +2,14 @@
 
 using namespace std;
 
-EditorWindow::EditorWindow()
+EditorWindow::EditorWindow(Game* game): GameWindow(game)
 {
-    // Images récupérées ici : https://rembound.com/articles/creating-a-snake-game-tutorial-with-html5
-    if(!bodyVertical.load("./data/body_vertical.png") or
-       !bodyHorizontal.load("./data/body_horizontal.png") or
-       !bodyTopLeft.load("./data/body_top_left.png") or
-       !bodyTopRight.load("./data/body_top_right.png") or
-       !bodyBottomLeft.load("./data/body_bottom_left.png") or
-       !bodyBottomRight.load("./data/body_bottom_right.png") or
-       !headUp.load("./data/head_up.png") or
-       !headDown.load("./data/head_down.png") or
-       !headLeft.load("./data/head_left.png") or
-       !headRight.load("./data/head_right.png") or
-       !tailUp.load("./data/tail_up.png") or
-       !tailDown.load("./data/tail_down.png") or
-       !tailLeft.load("./data/tail_left.png") or
-       !tailRight.load("./data/tail_right.png") or
-       !fruit.load("./data/fruit.png") or
-       !debug.load("./data/debug.png") or
-       !textBox.load("./data/textbox.png"))
-    {
-        cerr<<"Erreur lors du chargement des images"<<endl;
-        exit(1);
-    }
-
-    setLevelBackground(getLevelBackground());
-    applyLevelBackground();
-
-    QString fontPath = "./data/font.ttf";
-    int fontId = QFontDatabase::addApplicationFont(fontPath);
-    if (fontId == -1) {
-        cerr << "Erreur lors du chargement de la police d'écriture" << endl;
-        exit(1);
-    }
-
-    QString fontFamily = QFontDatabase::applicationFontFamilies(fontId).at(0);
-
-    const auto Maze_1_Button = new QPushButton("Carte 1", this);
-    Maze_1_Button->setFont(QFont(fontFamily, 12));
-    Maze_1_Button->setGeometry(0, 0, 160, 20);
-    Maze_1_Button->move(40, 520);
-    Maze_1_Button->setCursor(Qt::PointingHandCursor);
-    Maze_1_Button->setStyleSheet(
+    const auto level1Button = new QPushButton("Carte 1", this);
+    level1Button->setFont(QFont(m_fontFamily, 12));
+    level1Button->setGeometry(0, 0, 160, 20);
+    level1Button->move(40, 520);
+    level1Button->setCursor(Qt::PointingHandCursor);
+    level1Button->setStyleSheet(
             "QPushButton {"
             "    background-color: transparent;"
             "    border: none;"
@@ -57,12 +22,12 @@ EditorWindow::EditorWindow()
             "}"
     );
 
-    const auto Maze_2_Button = new QPushButton("Carte 2", this);
-    Maze_2_Button->setFont(QFont(fontFamily, 12));
-    Maze_2_Button->setGeometry(0, 0, 200, 20);
-    Maze_2_Button->move(40, 550);
-    Maze_2_Button->setCursor(Qt::PointingHandCursor);
-    Maze_2_Button->setStyleSheet(
+    const auto level2Button = new QPushButton("Carte 2", this);
+    level2Button->setFont(QFont(m_fontFamily, 12));
+    level2Button->setGeometry(0, 0, 200, 20);
+    level2Button->move(40, 550);
+    level2Button->setCursor(Qt::PointingHandCursor);
+    level2Button->setStyleSheet(
             "QPushButton {"
             "    background-color: transparent;"
             "    border: none;"
@@ -75,12 +40,12 @@ EditorWindow::EditorWindow()
             "}"
     );
 
-    const auto Maze_3_Button = new QPushButton("Carte 3", this);
-    Maze_3_Button->setFont(QFont(fontFamily, 12));
-    Maze_3_Button->setGeometry(0, 0, 200, 20);
-    Maze_3_Button->move(40, 580);
-    Maze_3_Button->setCursor(Qt::PointingHandCursor);
-    Maze_3_Button->setStyleSheet(
+    const auto level3Button = new QPushButton("Carte 3", this);
+    level3Button->setFont(QFont(m_fontFamily, 12));
+    level3Button->setGeometry(0, 0, 200, 20);
+    level3Button->move(40, 580);
+    level3Button->setCursor(Qt::PointingHandCursor);
+    level3Button->setStyleSheet(
             "QPushButton {"
             "    background-color: transparent;"
             "    border: none;"
@@ -93,12 +58,12 @@ EditorWindow::EditorWindow()
             "}"
     );
 
-    const auto Set_BG_1_Button = new QPushButton("Appliquer fond 1", this);
-    Set_BG_1_Button->setFont(QFont(fontFamily, 12));
-    Set_BG_1_Button->setGeometry(0, 0, 200, 20);
-    Set_BG_1_Button->move(210, 520);
-    Set_BG_1_Button->setCursor(Qt::PointingHandCursor);
-    Set_BG_1_Button->setStyleSheet(
+    const auto setTerrain1Button = new QPushButton("Appliquer fond 1", this);
+    setTerrain1Button->setFont(QFont(m_fontFamily, 12));
+    setTerrain1Button->setGeometry(0, 0, 200, 20);
+    setTerrain1Button->move(210, 520);
+    setTerrain1Button->setCursor(Qt::PointingHandCursor);
+    setTerrain1Button->setStyleSheet(
             "QPushButton {"
             "    background-color: transparent;"
             "    border: none;"
@@ -111,12 +76,12 @@ EditorWindow::EditorWindow()
             "}"
     );
 
-    const auto Set_BG_2_Button = new QPushButton("Appliquer fond 2", this);
-    Set_BG_2_Button->setFont(QFont(fontFamily, 12));
-    Set_BG_2_Button->setGeometry(0, 0, 200, 20);
-    Set_BG_2_Button->move(210, 550);
-    Set_BG_2_Button->setCursor(Qt::PointingHandCursor);
-    Set_BG_2_Button->setStyleSheet(
+    const auto setTerrain2Button = new QPushButton("Appliquer fond 2", this);
+    setTerrain2Button->setFont(QFont(m_fontFamily, 12));
+    setTerrain2Button->setGeometry(0, 0, 200, 20);
+    setTerrain2Button->move(210, 550);
+    setTerrain2Button->setCursor(Qt::PointingHandCursor);
+    setTerrain2Button->setStyleSheet(
             "QPushButton {"
             "    background-color: transparent;"
             "    border: none;"
@@ -129,12 +94,12 @@ EditorWindow::EditorWindow()
             "}"
     );
 
-    const auto Set_BG_3_Button = new QPushButton("Appliquer fond 3", this);
-    Set_BG_3_Button->setFont(QFont(fontFamily, 12));
-    Set_BG_3_Button->setGeometry(0, 0, 200, 20);
-    Set_BG_3_Button->move(210, 580);
-    Set_BG_3_Button->setCursor(Qt::PointingHandCursor);
-    Set_BG_3_Button->setStyleSheet(
+    const auto setTerrain3Button = new QPushButton("Appliquer fond 3", this);
+    setTerrain3Button->setFont(QFont(m_fontFamily, 12));
+    setTerrain3Button->setGeometry(0, 0, 200, 20);
+    setTerrain3Button->move(210, 580);
+    setTerrain3Button->setCursor(Qt::PointingHandCursor);
+    setTerrain3Button->setStyleSheet(
             "QPushButton {"
             "    background-color: transparent;"
             "    border: none;"
@@ -147,12 +112,12 @@ EditorWindow::EditorWindow()
             "}"
     );
 
-    const auto Set_BG_4_Button = new QPushButton("Appliquer fond 4", this);
-    Set_BG_4_Button->setFont(QFont(fontFamily, 12));
-    Set_BG_4_Button->setGeometry(0, 0, 200, 20);
-    Set_BG_4_Button->move(420, 520);
-    Set_BG_4_Button->setCursor(Qt::PointingHandCursor);
-    Set_BG_4_Button->setStyleSheet(
+    const auto setTerrain4Button = new QPushButton("Appliquer fond 4", this);
+    setTerrain4Button->setFont(QFont(m_fontFamily, 12));
+    setTerrain4Button->setGeometry(0, 0, 200, 20);
+    setTerrain4Button->move(420, 520);
+    setTerrain4Button->setCursor(Qt::PointingHandCursor);
+    setTerrain4Button->setStyleSheet(
             "QPushButton {"
             "    background-color: transparent;"
             "    border: none;"
@@ -165,12 +130,12 @@ EditorWindow::EditorWindow()
             "}"
     );
 
-    const auto Set_BG_5_Button = new QPushButton("Appliquer fond 5", this);
-    Set_BG_5_Button->setFont(QFont(fontFamily, 12));
-    Set_BG_5_Button->setGeometry(0, 0, 200, 20);
-    Set_BG_5_Button->move(420, 550);
-    Set_BG_5_Button->setCursor(Qt::PointingHandCursor);
-    Set_BG_5_Button->setStyleSheet(
+    const auto setTerrain5Button = new QPushButton("Appliquer fond 5", this);
+    setTerrain5Button->setFont(QFont(m_fontFamily, 12));
+    setTerrain5Button->setGeometry(0, 0, 200, 20);
+    setTerrain5Button->move(420, 550);
+    setTerrain5Button->setCursor(Qt::PointingHandCursor);
+    setTerrain5Button->setStyleSheet(
             "QPushButton {"
             "    background-color: transparent;"
             "    border: none;"
@@ -183,12 +148,12 @@ EditorWindow::EditorWindow()
             "}"
     );
 
-    const auto SaveButton = new QPushButton("Sauvegarder", this);
-    SaveButton->setFont(QFont(fontFamily, 12));
-    SaveButton->setGeometry(0, 0, 200, 20);
-    SaveButton->move(420, 580);
-    SaveButton->setCursor(Qt::PointingHandCursor);
-    SaveButton->setStyleSheet(
+    const auto saveButton = new QPushButton("Sauvegarder", this);
+    saveButton->setFont(QFont(m_fontFamily, 12));
+    saveButton->setGeometry(0, 0, 200, 20);
+    saveButton->move(420, 580);
+    saveButton->setCursor(Qt::PointingHandCursor);
+    saveButton->setStyleSheet(
             "QPushButton {"
             "    background-color: transparent;"
             "    border: none;"
@@ -201,177 +166,75 @@ EditorWindow::EditorWindow()
             "}"
     );
 
-    connect(Maze_1_Button, &QPushButton::clicked, this, [this]() { this->loadMaze(1); });
-    connect(Maze_2_Button, &QPushButton::clicked, this, [this]() { this->loadMaze(2); });
-    connect(Maze_3_Button, &QPushButton::clicked, this, [this]() { this->loadMaze(3); });
-    connect(Set_BG_1_Button, &QPushButton::clicked, this, [this]() {setLevelBackground("./data/BG_1.png");});
-    connect(Set_BG_2_Button, &QPushButton::clicked, this, [this]() {setLevelBackground("./data/BG_2.png");});
-    connect(Set_BG_3_Button, &QPushButton::clicked, this, [this]() {setLevelBackground("./data/BG_3.png");});
-    connect(Set_BG_4_Button, &QPushButton::clicked, this, [this]() {setLevelBackground("./data/BG_4.png");});
-    connect(Set_BG_5_Button, &QPushButton::clicked, this, [this]() {setLevelBackground("./data/BG_5.png");});
-    connect(SaveButton, &QPushButton::clicked, this, &EditorWindow::saveMap);
+    connect(level1Button, &QPushButton::clicked, this, [this]() { this->loadLevel(1); });
+    connect(level2Button, &QPushButton::clicked, this, [this]() { this->loadLevel(2); });
+    connect(level3Button, &QPushButton::clicked, this, [this]() { this->loadLevel(3); });
+    connect(setTerrain1Button, &QPushButton::clicked, this, [this]() {setTerrainImage("./data/terrains/terrain_1.png");});
+    connect(setTerrain2Button, &QPushButton::clicked, this, [this]() {setTerrainImage("./data/terrains/terrain_2.png");});
+    connect(setTerrain3Button, &QPushButton::clicked, this, [this]() {setTerrainImage("./data/terrains/terrain_3.png");});
+    connect(setTerrain4Button, &QPushButton::clicked, this, [this]() {setTerrainImage("./data/terrains/terrain_4.png");});
+    connect(setTerrain5Button, &QPushButton::clicked, this, [this]() {setTerrainImage("./data/terrains/terrain_5.png");});
+    connect(saveButton, &QPushButton::clicked, this, &EditorWindow::saveLevel);
 
+    clearCache();
 }
 
-void EditorWindow::paintEvent(QPaintEvent *) {
-    QPainter painter(this);
-
-    Position pos;
-
-    // Dessine les cases
-    for (pos.y = 0; pos.y < jeu.getNbCasesY(); pos.y++)
-        for (pos.x = 0; pos.x < jeu.getNbCasesX(); pos.x++)
-            if (jeu.getCase(pos) == MUR) {
-                //painter.drawPixmap(pos.x*TAILLE_CASE, pos.y*TAILLE_CASE, wall);
-                QRect sourceRect(9 + 4 * 25, 163 + 4 * 25, 24, 24);
-                QRect destRect(pos.x * TAILLE_CASE, pos.y * TAILLE_CASE, 32, 32);
-                painter.drawPixmap(destRect, background, sourceRect);
-            } else if (jeu.getCase(pos) == FRUIT) {
-                QRect sourceRect = grid[pos];
-                QRect destRect(pos.x * TAILLE_CASE, pos.y * TAILLE_CASE, 32, 32);
-                painter.drawPixmap(destRect, background, sourceRect);
-                painter.drawPixmap(pos.x * TAILLE_CASE, pos.y * TAILLE_CASE, fruit);
-            } else if (jeu.getCase(pos) == SOL) {
-                QRect sourceRect = grid[pos];
-                QRect destRect(pos.x * TAILLE_CASE, pos.y * TAILLE_CASE, 32, 32);
-                painter.drawPixmap(destRect, background, sourceRect);
-            } else
-                painter.drawPixmap(pos.x * TAILLE_CASE, pos.y * TAILLE_CASE, debug);
-
-    // Pour l'affichage au niveau de la text box
-    for (pos.y = jeu.getNbCasesY(); pos.y < jeu.getNbCasesY() + 5; pos.y++)
-        for (pos.x = 0; pos.x < jeu.getNbCasesX(); pos.x++) {
-            if (pos.x == 0 and pos.y == 15) {
-                QRect sourceRect(9 + 3 * 25, 163 + 0 * 25, 24, 24);
-                QRect destRect(pos.x * TAILLE_CASE, pos.y * TAILLE_CASE, 32, 32);
-                painter.drawPixmap(destRect, background, sourceRect);
-            } else if (pos.x == 19 and pos.y == 15) {
-                QRect sourceRect(9 + 5 * 25, 163 + 0 * 25, 24, 24);
-                QRect destRect(pos.x * TAILLE_CASE, pos.y * TAILLE_CASE, 32, 32);
-                painter.drawPixmap(destRect, background, sourceRect);
-            } else if (pos.x == 0 and pos.y == 19) {
-                QRect sourceRect(9 + 3 * 25, 163 + 2 * 25, 24, 24);
-                QRect destRect(pos.x * TAILLE_CASE, pos.y * TAILLE_CASE, 32, 32);
-                painter.drawPixmap(destRect, background, sourceRect);
-            } else if (pos.x == 19 and pos.y == 19) {
-                QRect sourceRect(9 + 5 * 25, 163 + 2 * 25, 24, 24);
-                QRect destRect(pos.x * TAILLE_CASE, pos.y * TAILLE_CASE, 32, 32);
-                painter.drawPixmap(destRect, background, sourceRect);
-            } else if (pos.x == 19) {
-                QRect sourceRect(9 + 5 * 25, 163 + 1 * 25, 24, 24);
-                QRect destRect(pos.x * TAILLE_CASE, pos.y * TAILLE_CASE, 32, 32);
-                painter.drawPixmap(destRect, background, sourceRect);
-            } else if (pos.x == 0) {
-                QRect sourceRect(9 + 3 * 25, 163 + 1 * 25, 24, 24);
-                QRect destRect(pos.x * TAILLE_CASE, pos.y * TAILLE_CASE, 32, 32);
-                painter.drawPixmap(destRect, background, sourceRect);
-            } else if (pos.y == 15) {
-                QRect sourceRect(9 + 4 * 25, 163 + 0 * 25, 24, 24);
-                QRect destRect(pos.x * TAILLE_CASE, pos.y * TAILLE_CASE, 32, 32);
-                painter.drawPixmap(destRect, background, sourceRect);
-            } else if (pos.y == 19) {
-                QRect sourceRect(9 + 4 * 25, 163 + 2 * 25, 24, 24);
-                QRect destRect(pos.x * TAILLE_CASE, pos.y * TAILLE_CASE, 32, 32);
-                painter.drawPixmap(destRect, background, sourceRect);
-            }
-    }
-
-    painter.drawPixmap(0, 480, textBox);
-}
-
-void EditorWindow::keyPressEvent(QKeyEvent *event)
+void EditorWindow::clearCache()
 {
-    if (event->key()==Qt::Key_Space)
-    {
-        jeu.togglePause();
-        if (jeu.isPaused())
-        {
-            cout<<"Jeu en pause"<<endl;
-
-            QLabel *label = new QLabel(this);
-            label->setText("Jeu en pause");
-            label->setAlignment(Qt::AlignCenter);
-            label->setGeometry(0, 0, width(), height());
-            label->setStyleSheet("QLabel { background-color : rgba(0, 0, 0, 100); color : white; }");
-            label->show();
-        }
-        else {
-            cout << "Jeu en cours" << endl;
-
-            QList<QLabel *> labels = findChildren<QLabel *>();
-            for (QLabel *label : labels)
-                label->close();
-        }
-    }
-    if (event->key()==Qt::Key_Escape)
-        QCoreApplication::quit();
-    if (!jeu.isStarted())
-        jeu.setStarted();
-    if (!jeu.isPaused())
-    {
-        if (event->key()==Qt::Key_Left and jeu.getDirection()!=DROITE)
-            jeu.setDirection(GAUCHE);
-        else if (event->key()==Qt::Key_Right and jeu.getDirection()!=GAUCHE)
-            jeu.setDirection(DROITE);
-        else if (event->key()==Qt::Key_Up and jeu.getDirection()!=BAS)
-            jeu.setDirection(HAUT);
-        else if (event->key()==Qt::Key_Down and jeu.getDirection()!=HAUT)
-            jeu.setDirection(BAS);
-    }
-    else
-        return;
-    update();
+    int levelIndex = m_game->getLevelIndex();
+    this->loadLevel(0);     // Passe au level 0 pour nettoyer les images
+    this->loadLevel(1);
 }
 
-void EditorWindow::startEditor()
+void EditorWindow::onPaintEvent(QPainter* painter)
 {
-    jeu.loadTerrainTxt();
-    jeu.initTerrain();
-    initGrid();
-    update();
 }
+
 
 void EditorWindow::mousePressEvent(QMouseEvent *event) {
     QPoint localMousePos = event->pos();  // Position locale de la souris
 
-    int x = localMousePos.x() / TAILLE_CASE;
-    int y = localMousePos.y() / TAILLE_CASE;
+    int x = localMousePos.x() / CASE_SIZE;
+    int y = localMousePos.y() / CASE_SIZE;
 
-    if (x >= 0 && x < jeu.getNbCasesX() && y >= 0 && y < jeu.getNbCasesY()) {
-        // Modifier la case
-        if (jeu.getCase(x, y) == SOL) {
-            jeu.setCase(x, y, MUR);
+    if (x >= 0 && x < m_game->getNbCasesX() && y >= 0 && y < m_game->getNbCasesY()) {
+        // Modifie la case
+        if (m_game->getCase(x, y) == GROUND) {
+            m_game->setCase(x, y, WALL);
         } else {
-            jeu.setCase(x, y, SOL);
+            m_game->setCase(x, y, GROUND);
         }
         update();
     }
 }
 
-void EditorWindow::loadMaze(int mazeIndex) {
+void EditorWindow::loadLevel(int levelIndex) 
+{
+    string levelPath = GlobalSettings::levelPaths[levelIndex];
+    LevelData* levelData = m_game->getLevelData();
+    levelData->reloadLevelData(levelPath);
 
-    jeu.setLevel(mazeIndex);
-    levelBackground = getLevelBackground();
-    applyLevelBackground();
-    jeu.loadTerrainTxt();
-    jeu.initTerrain();
-    initGrid();
+    m_game->setLevelIndex(levelIndex);
+    m_game->reloadTerrain();
+
+    // Mise à jour de la fenêtre
+    reinit();
     update();
 }
 
-void EditorWindow::saveMap() {
+void EditorWindow::saveLevel() {
 
     ofstream file;
-    file.open (Jeu::terrainTxtPaths[jeu.getLevelIndex()]);
+    file.open (GlobalSettings::levelPaths[m_game->getLevelIndex()]);
 
-    file << levelBackground << "\n";
+    file << m_game->getLevelData()->getTerrainImagePath() << "\n";
 
-    for (int i = 0; i < LIGNES; ++i) {
-        for (int j = 0; j < COLONNES; ++j) {
-            if (jeu.getCase(j, i) == MUR)
-                file << "#"; // Écrire un point pour une case SOL
-            else
-                file << "."; // Écrire un dièse pour une case MUR
+    for (int i = 0; i < ROWS; ++i) {
+        for (int j = 0; j < COLUMNS; ++j) {
+            if (m_game->getCase(j, i) == WALL)
+                file << "#"; // Ecrit un dièse pour une case WALL
+            else 
+                file << "."; // Ecrit un point pour une case GROUND
         }
         file << "\n"; // Nouvelle ligne après chaque ligne de la matrice
     }
@@ -380,35 +243,8 @@ void EditorWindow::saveMap() {
 
 }
 
-std::string EditorWindow::getLevelBackground() {
-
-    ifstream file(Jeu::terrainTxtPaths[jeu.getLevelIndex()]);
-    string firstLine;
-    getline(file, firstLine);
-    file.close();
-    return firstLine;
-}
-
-void EditorWindow::setLevelBackground(const std::string& background) {
-    levelBackground = background;
-    applyLevelBackground();
+void EditorWindow::setTerrainImage(std::string terrainImagePath) {
+    m_game->getLevelData()->setTerrainImagePath(terrainImagePath);
+    m_terrainPixmap.load(QString::fromStdString(terrainImagePath));
     update();
 }
-
-void EditorWindow::applyLevelBackground() {
-    QString backgroundImagePath = QString::fromStdString(levelBackground);
-    background.load(backgroundImagePath);
-}
-
-void EditorWindow::initGrid() {
-        for (int y = 0; y < jeu.getNbCasesY(); ++y) {
-            for (int x = 0; x < jeu.getNbCasesX(); ++x) {
-                Position pos(x, y);
-                int randomX = QRandomGenerator::global()->bounded(3);
-                int randomY = QRandomGenerator::global()->bounded(3);
-                QRect sourceRect(9 + (12 + randomX) * 25, 163 + randomY * 25, 24, 24);
-                grid[pos] = sourceRect;
-
-            }
-        }
-    }

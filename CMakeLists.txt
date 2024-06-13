@@ -22,14 +22,16 @@ include_directories(${FMOD_INCLUDE_DIR})
 link_libraries(${FMOD_LIBRARY_LIB})
 
 add_executable(Snake ${RESOURCE_ADDED}
-        main.cpp
-        jeu.cpp
-        snakewindow.cpp
-        mainmenu.hpp
-        gamewindow.hpp
+        editorwindow.cpp
+        game.cpp
         gamewindow.cpp
-        globalsettings.hpp
-        sound.cpp sound.hpp editorwindow.cpp editorwindow.hpp mainmenu.cpp)
+        globalsettings.cpp
+        leveldata.cpp
+        main.cpp
+        mainmenu.cpp
+        playwindow.cpp
+        snakewindow.cpp
+        sound.cpp)
 
 target_link_libraries(Snake
         Qt5::Core

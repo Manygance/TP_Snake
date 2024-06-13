@@ -1,50 +1,24 @@
 #ifndef EDITORWINDOW_HPP
 #define EDITORWINDOW_HPP
 
+#include "gamewindow.hpp"
 
-#include <QtCore/QtCore>
-#include <QtWidgets/QtWidgets>
-#include <QPainter>
-#include <QTimer>
-#include <QLabel>
-#include <QImage>
-#include <QCursor>
-#include <QMouseEvent>
-#include <fstream>
-
-#include "jeu.hpp"
-#include "globalsettings.hpp"
-
-// TODO : voir si possible de faire une classe mère ?
-class EditorWindow : public QMainWindow {
+class EditorWindow : public GameWindow {
 Q_OBJECT
 
-protected:
-    Jeu jeu;
-    QPixmap fruit;
-    QPixmap bodyVertical, bodyHorizontal, bodyTopLeft, bodyTopRight, bodyBottomLeft, bodyBottomRight, headUp, headDown, headLeft, headRight, tailUp, tailDown, tailLeft, tailRight;
-    QPixmap background;
-    QPixmap debug, textBox;
-    std::string  levelBackground;
-
 public:
-    EditorWindow();
-    std::string getLevelBackground();
-    void setLevelBackground(const std::string& background);
-    void applyLevelBackground();
-    void paintEvent(QPaintEvent *);
-    void keyPressEvent(QKeyEvent *);
-    void startEditor();
+    EditorWindow(Game*);
     void mousePressEvent(QMouseEvent *event);
 
-    QMap<Position, QRect> grid;
+    virtual void onPaintEvent(QPainter*) override;
 
-    void initGrid();
+private:
+    void clearCache();
 
 private slots:
-    void loadMaze(int mazeIndex);
-    void saveMap();
-
+    void loadLevel(int levelIndex);
+    void saveLevel();
+    void setTerrainImage(std::string);
 };
 
 

@@ -1,0 +1,4 @@
+/home/thomas_debelle/Bureau/snake/TP_Snake/build/CMakeFiles/Snake.dir
+/home/thomas_debelle/Bureau/snake/TP_Snake/build/CMakeFiles/edit_cache.dir
+/home/thomas_debelle/Bureau/snake/TP_Snake/build/CMakeFiles/rebuild_cache.dir
+/home/thomas_debelle/Bureau/snake/TP_Snake/build/CMakeFiles/Snake_autogen.dir
