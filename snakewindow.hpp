@@ -29,15 +29,15 @@ public:
 
 private:
     // Events
-    void paintEvent(QPaintEvent *event);
-    void handlePlayClicked(int levelIndex);
-    void handleExitClicked();
-    void handleCreateMapClicked();
+    void paintEvent(QPaintEvent *event);  // Surcharge de la méthode paintEvent de QMainWindow
+    void handlePlayClicked(int levelIndex); // Slot appelé lors du clic sur le bouton "Jouer"
+    void handleExitClicked(); // Slot appelé lors du clic sur le bouton "Quitter"
+    void handleCreateMapClicked(); // Slot appelé lors du clic sur le bouton "Créer une carte"
 
     // Attributs
-    Game* m_game;
-    QStackedWidget *m_stackedWidget;
-    MainMenu *m_mainMenu;
+    Game* m_game; // Pointeur vers le jeu en cours
+    QStackedWidget *m_stackedWidget; // Widget empilé pour afficher les différentes fenêtres (menu principal, jeu, éditeur)
+    MainMenu *m_mainMenu; // Widget du menu principal
 };
 
 #endif

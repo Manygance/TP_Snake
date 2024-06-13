@@ -27,8 +27,8 @@ signals:
 
     /// @brief Lancement de l'éditeur de niveaux
     void createMapClicked();
-    
-public slots:
+
+public slots: // non utilisé parce que problèmes lorsqu'on veut lance un niveau avec le son désactivé dans le menu principal
     /// @brief Activation/désactivation du son
     void toggleVolume() {
         volumeOn = !volumeOn;

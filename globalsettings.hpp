@@ -6,6 +6,7 @@
 #define ROWS 15
 #define COLUMNS 20
 #define CASE_SIZE 32
+#define LEVEL_MAX 3
 
 #include <iostream>
 #include <string>

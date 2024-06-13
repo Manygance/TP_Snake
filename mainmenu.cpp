@@ -151,7 +151,8 @@ MainMenu::MainMenu(QWidget *parent) : QWidget(parent)
         "QPushButton:hover {"
         "    color: yellow;"
         "}");
-
+/* // supprimé pour le moment car le son du niveau se relance au chargement du niveau
+   //si on le désactive dans le menu principal
     const auto volumeButton = new QPushButton("Son", this);
     volumeButton->setFont(QFont(fontFamily, 12));
     volumeButton->setGeometry(0, 0, 160, 20);
@@ -168,11 +169,11 @@ MainMenu::MainMenu(QWidget *parent) : QWidget(parent)
         "QPushButton:hover {"
         "    color: yellow;"
         "}");
-
+*/
     const auto exitButton = new QPushButton("Quitter", this);
     exitButton->setFont(QFont(fontFamily, 12));
     exitButton->setGeometry(0, 0, 160, 20);
-    exitButton->move(40, 220);
+    exitButton->move(40, 190);
     exitButton->setCursor(Qt::PointingHandCursor);
     exitButton->setStyleSheet(
         "QPushButton {"
@@ -186,7 +187,7 @@ MainMenu::MainMenu(QWidget *parent) : QWidget(parent)
         "    color: yellow;"
         "}");
 
-    connect(volumeButton, &QPushButton::clicked, this, &MainMenu::toggleVolume);
+    //connect(volumeButton, &QPushButton::clicked, this, &MainMenu::toggleVolume);
 
     connect(playEmptyButton, &QPushButton::clicked, this, [this]()
             { this->playClicked(0); });

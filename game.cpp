@@ -104,13 +104,13 @@ bool Game::reloadGame()
 
     m_nextLevelCondition = GlobalSettings::nextLevelConditions[m_levelIndex];
 
-    reloadTerrain();
-    resetFruit();
+    reloadTerrain(); // Rechargement du terrain
+    resetFruit();   // Réinitialisation de la position du fruit
 
-    int snakeLength = 5;
-    m_snake.clear();
+    int snakeLength = 5; // Longueur du serpent au début
+    m_snake.clear(); // Vide la liste du serpent
 
-    Position headPos;
+    Position headPos; // Position de la tête du serpent
     headPos.x = 15;
     headPos.y = 8; 
 	for (int i=0; i<snakeLength; i++)
@@ -130,6 +130,7 @@ void Game::reloadTerrain(){
 
     m_terrain = new Case[m_width*m_height];
 
+    // Remplissage du terrain avec les données du niveau
     for(y=0;y<ROWS;++y)
         for(x=0;x<COLUMNS;++x)
             if (m_levelData->getTerrainTxtCase(y, x)=='#')
@@ -160,20 +161,21 @@ void Game::update()
     testPos.x = (m_snake.front().x + depX[m_snakeDir] + m_width) % m_width;
     testPos.y = (m_snake.front().y + depY[m_snakeDir] + m_height) % m_height;
 
-    if(m_terrain[testPos.y * m_width + testPos.x] == STAIRS)
+
+    if(m_terrain[testPos.y * m_width + testPos.x] == STAIRS && m_levelIndex != LEVEL_MAX) // Si la case est un escalier on les prend
     {
         takeStairs();
     }
-    else if (isPosValid(testPos)) {
-        m_snake.pop_back();
-        m_snake.push_front(testPos);
+    else if (isPosValid(testPos)) { // Si la case est valide, on avance
+        m_snake.pop_back(); // Supprime la dernière case du serpent
+        m_snake.push_front(testPos); // Ajoute une case à la tête du serpent
         if (m_terrain[testPos.y * m_width + testPos.x] == FRUIT) {
             m_snake.push_back(m_snake.back()); // Ajoute une case à la fin du serpent
             pickFruit(testPos);     // Collecte le fruit et incrémente le score
             resetFruit();           
         }
     }
-    else {
+    else { // Sinon, on a perdu
         reloadGame();
     }
 
@@ -192,14 +194,14 @@ void Game::pickFruit(const Position& pos)
 }
 
 void Game::resetFruit() {
-    bool isSnake;
+    bool isSnake; // Vérifie si la position du fruit est sur le serpent
 
-    do
+    do // On cherche une position valide pour le fruit
     {
         isSnake = false;
         m_fruitPos.x = rand()%(m_width-1);
         m_fruitPos.y = rand()%(m_height-1);
-        for(list<Position>::const_iterator it = m_snake.begin(); it != m_snake.end(); it++)
+        for(list<Position>::const_iterator it = m_snake.begin(); it != m_snake.end(); it++) // On vérifie que la position n'est pas sur le serpent
         {
             if(*it == m_fruitPos)
                 isSnake = true;
@@ -210,6 +212,7 @@ void Game::resetFruit() {
 }
 
 void Game::takeStairs() {
+    // On réinitialise le jeu pour le niveau suivant
     m_stairsAdded = false;
     loadNextLevel();
 }

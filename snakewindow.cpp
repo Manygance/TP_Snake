@@ -4,19 +4,24 @@ using namespace std;
 
 SnakeWindow::SnakeWindow(QWidget *pParent, Qt::WindowFlags flags):QMainWindow(pParent, flags)
 {
+
+    // Initialisation de la fenêtre
     this->setWindowTitle("Snake by Thomas and Bastien");
     this->setFixedSize(WINDOW_COL*CASE_SIZE, WINDOW_ROWS*CASE_SIZE);
 
+    // Creation du menu principal et ajout au stacked widget
     m_stackedWidget = new QStackedWidget(this);
     m_mainMenu = new MainMenu(this);
     m_stackedWidget->addWidget(m_mainMenu);
     m_stackedWidget->setCurrentWidget(m_mainMenu);
     setCentralWidget(m_stackedWidget);
 
+    // Connexion des signaux du menu principal
     connect(m_mainMenu, &MainMenu::playClicked, this, &SnakeWindow::handlePlayClicked);
     connect(m_mainMenu, &MainMenu::exitClicked, this, &SnakeWindow::handleExitClicked);
     connect(m_mainMenu, &MainMenu::createMapClicked, this, &SnakeWindow::handleCreateMapClicked);
 
+    // Initialisation du système de son
     initializeSoundSystem();
     playBackgroundMusic("./data/Music_Title.mp3");
 

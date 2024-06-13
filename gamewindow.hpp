@@ -29,7 +29,7 @@ public:
     virtual void onPaintEvent(QPainter*) = 0;
 
 protected:
-
+    /// @brief Pointeur vers le jeu
     Game* m_game;
     QPixmap m_fruitPixmap, m_terrainPixmap, m_pokemonPixmap, m_stairsPixmap, m_debugPixmap, m_textBoxPixmap;
 
