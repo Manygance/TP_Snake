@@ -1,0 +1,32 @@
+Projet de programmation orientée objet avancé par Thomas Debelle et Bastien Jayet
+
+Réalisation d'un Snake en C++ avec les bibliothèques QT5 et FMOD avec une direction artistique inspirée de Pokemon
+donjon mystère.
+
+## COMMENT JOUER
+• Le jeu est composé de 4 cartes différentes, avec une première carte vide qui se relance à chaque défaite.
+Les autres cartes sont des labyrinthes avec des murs. L'objectif est de manger suffisamment de fruits pour
+débloquer un escalier et passer au niveau suivant.
+
+## COMMENT SELECTIONNER UN NIVEAU
+• Pour sélectionner un niveau, il faut cliquer sur l'un des niveaux avec la souris, même chose pour les autres menus.
+• Le bouton ECHAP permet de quitter le jeu à tout moment.
+
+## COMMENT SE DEPLACER
+• Pour se déplacer, il suffit d'utiliser les flèches directionnelles du clavier.
+• Le déplacement est prévu pour n'avoir qu'à presser une seule fois la touche directionnelle pour que le snake se
+déplace jusqu'à ce qu'il ne puisse plus avancer dans cette direction, s'il touche un mur ou lui-même, il meurt.
+
+## COMMENT modifier une carte
+• Le menu "Editeur de carte" permet de créer ses propres cartes, il suffit de cliquer sur une case pour la
+modifier en mur ou en sol. Il est également possible de changer le fond du niveau. Il faut nécessairement cliquer
+sur le bouton "Sauvegarder" pour que les modifications soient prises en compte.
+
+
+## A AMELIORER
+
+• Un menu de pause plus complet.
+• Une option pour pouvoir revenir au menu principal, actuellement, il faut fermer et relancer le jeu quand
+on se trouve dans le menu editeur de carte pour pouvoir jouer.
+• Jouer un son lorsqu'on mange un fruit, l'option est disponible dans le code mais n'a pas été implémentée
+puisque le son ne semblait pas se jouer malgré les appels à la fonction FMOD.
