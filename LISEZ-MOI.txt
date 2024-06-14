@@ -30,3 +30,7 @@ sur le bouton "Sauvegarder" pour que les modifications soient prises en compte.
 on se trouve dans le menu editeur de carte pour pouvoir jouer.
 • Jouer un son lorsqu'on mange un fruit, l'option est disponible dans le code mais n'a pas été implémentée
 puisque le son ne semblait pas se jouer malgré les appels à la fonction FMOD.
+
+## Pour FMOD :
+Il faut créer un fichier fmod-2.02/include puis créer deux sous dossiers, l'un nommé fmod avec tous les .h et l'autre
+nomé lib avec les librairies pour linux et windows
